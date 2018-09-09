@@ -20,8 +20,10 @@ class SalesAnalystTest < Minitest::Test
   end
 
   def test_it_takes_in_arguments
-    assert_equal 1367, @sa.items.length
-    assert_equal 475, @sa.merchants.length
+    assert_instance_of ItemRepository, @sa.items
+    assert_instance_of MerchantRepository, @sa.merchants
+    assert_equal 1367, @sa.items.items.length
+    assert_equal 475, @sa.merchants.merchants.length
   end
 
   def test_it_returns_average_number_of_items_per_merchant
@@ -36,6 +38,19 @@ class SalesAnalystTest < Minitest::Test
 
   def test_it_returns_standard_deviation
     assert_equal 3.26, @sa.average_items_per_merchant_standard_deviation
+  end
+
+  def test_it_returns_an_array_of_merchant_ids_that_sell_the_most_items
+    assert_equal 52, @sa.merchant_ids_with_high_item_count.length
+    assert_instance_of Array, @sa.merchant_ids_with_high_item_count
+    assert_equal "12334195", @sa.merchant_ids_with_high_item_count.first
+    assert_equal "12334522", @sa.merchant_ids_with_high_item_count.last
+  end
+
+  def test_it_returns_an_array_of_merchants_that_sell_the_most_items
+    assert_equal 52, @sa.merchants_with_high_item_count.length
+    assert_instance_of Array, @sa.merchants_with_high_item_count
+    assert_instance_of Merchant, @sa.merchants_with_high_item_count.first
   end
 
 end
