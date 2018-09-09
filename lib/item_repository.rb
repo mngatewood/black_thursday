@@ -45,4 +45,11 @@ class ItemRepository
     items.find_all{|item|item.merchant_id == merchant_id}
   end
 
+  def create(attributes)
+    id = @items.map{|item|item.id}.max + 1
+    attributes[:id] = id
+    i = Item.new(attributes)
+    add_item(i)
+  end
+
 end

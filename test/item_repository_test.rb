@@ -1,6 +1,7 @@
 require 'minitest/autorun'
 require 'minitest/pride'
 require 'bigdecimal'
+require 'time'
 require_relative '../lib/item_repository'
 require_relative '../lib/item'
 
@@ -129,6 +130,26 @@ class ItemRepositoryTest < Minitest::Test
     expected = [@item_1, @item_2]
     assert_equal expected, @ir.find_all_by_merchant_id(2)
     assert_equal [], @ir.find_all_by_merchant_id(0)
+  end
+
+  def test_it_can_create_a_new_item
+    self.add_test_items
+    attributes = {:name => "Keyboard",
+                  :description => "You can use it to type things",
+                  :unit_price => BigDecimal.new(59.99,4),
+                  :created_at => Time.new(2018, 9, 8, 0, 0, 0, "-06:00"),
+                  :updated_at => Time.new(2018, 9, 9, 0, 0, 0, "-06:00"),
+                  :merchant_id => 2
+                  }
+    @ir.create(attributes)
+    item = @ir.items.last
+    assert_equal 6, item.id
+    assert_equal "Keyboard", item.name
+    assert_equal "You can use it to type things", item.description
+    assert_equal BigDecimal.new(59.99,4), item.unit_price
+    assert_equal "2018-09-08 00:00:00 -0600", item.created_at.to_s
+    assert_equal "2018-09-09 00:00:00 -0600", item.updated_at.to_s
+    assert_equal 2, item.merchant_id
   end
 
 end
