@@ -117,4 +117,11 @@ class ItemRepositoryTest < Minitest::Test
     assert_equal [], @ir.find_all_by_price(14.99)
   end
 
+  def test_it_can_find_all_items_within_price_range
+    self.add_test_items
+    expected = [@item_1, @item_2, @item_3]
+    assert_equal expected, @ir.find_all_by_price_in_range(10..20)
+    assert_equal [], @ir.find_all_by_price_in_range(20..50)
+  end
+
 end
