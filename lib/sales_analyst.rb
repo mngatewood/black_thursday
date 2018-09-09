@@ -51,4 +51,11 @@ class SalesAnalyst
     return top_merchants
   end
 
+  def average_item_price_for_merchant(merchant_id)
+    all_items = items.all.find_all{|item|item.merchant_id == merchant_id.to_s}
+    all_prices = all_items.map{|item|item.unit_price}
+    total_all_prices = all_prices.inject(0){|sum, price|sum + price}
+    return total_all_prices / all_items.length
+  end
+
 end

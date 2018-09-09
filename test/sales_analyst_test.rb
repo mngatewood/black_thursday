@@ -53,4 +53,9 @@ class SalesAnalystTest < Minitest::Test
     assert_instance_of Merchant, @sa.merchants_with_high_item_count.first
   end
 
+  def test_it_can_return_average_unit_price_for_a_given_merchant
+    expected = BigDecimal.new(31.50, 4)
+    assert_equal expected, @sa.average_item_price_for_merchant(12334159)
+  end
+
 end
