@@ -48,8 +48,26 @@ class ItemRepository
   def create(attributes)
     id = @items.map{|item|item.id}.max + 1
     attributes[:id] = id
-    i = Item.new(attributes)
-    add_item(i)
+    item = Item.new(attributes)
+    add_item(item)
+  end
+
+  def update(id, attributes)
+    item = find_by_id(id)
+    keys = attributes.keys
+    valid_keys = [:name, :description, :unit_price]
+    invalid_keys = keys - valid_keys
+    invalid_keys.length == 0 ? 
+      update_item_attributes(item, attributes, keys) :
+      "Invalid key(s): #{invalid_keys.join(", ")}"
+  end
+    
+  def update_item_attributes(item, attributes, keys)
+    keys.each do |key|
+      value = attributes[key]
+      item.send("#{key}=",value)
+    end
+    item.updated_at = "2018-09-10 00:00:00 -0600"
   end
 
 end
