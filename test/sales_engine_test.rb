@@ -14,7 +14,6 @@ class SalesEngineTest < Minitest::Test
       :items     => "./data/items.csv",
       :merchants => "./data/merchants.csv",
     })
-
     assert_instance_of SalesEngine, se
   end
 
@@ -23,7 +22,6 @@ class SalesEngineTest < Minitest::Test
       :items     => "./data/items.csv",
       :merchants => "./data/merchants.csv",
     })
-
     assert_instance_of MerchantRepository, se.merchants
     assert_equal 475, se.merchants.merchants.length
   end
@@ -46,7 +44,6 @@ class SalesEngineTest < Minitest::Test
       :items     => "./data/items.csv",
       :merchants => "./data/merchants.csv",
     })
-
     assert_instance_of ItemRepository, se.items
     assert_equal 1367, se.items.items.length
   end
