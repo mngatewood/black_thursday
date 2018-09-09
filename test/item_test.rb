@@ -31,4 +31,9 @@ class ItemTest < Minitest::Test
     assert_equal 2, @item.merchant_id
   end
 
+  def test_it_returns_price_as_a_float
+    expected = 
+    assert_equal 10.99, @item.unit_price_to_dollars
+  end
+
 end
