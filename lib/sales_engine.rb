@@ -12,29 +12,46 @@ class SalesEngine
 
   def self.from_csv(repositories)
     se = SalesEngine.new
-    ir = ItemRepository.new
-    mr = MerchantRepository.new
-    file_path = repositories[:merchants]
-    all_merchants = CSV.read(file_path, headers: true, header_converters: :symbol)
-    all_merchants.each do |merchant|
-      m = Merchant.new({:id => merchant[0], :name => merchant[1]})
-      mr.add_merchant(m)
-    end
-    se.merchants = mr
+    merchant_repository = se.load_merchant_repository(repositories[:merchants])
+    item_repository = se.load_item_repository(repositories[:items])
 
-    file_path = repositories[:items]
-    all_items = CSV.read(file_path, headers: true, header_converters: :symbol)
-    all_items.each do |item|
-      i = Item.new({
-        :name        => "Pencil",
-        :description => "You can use it to write things",
-        :unit_price  => BigDecimal.new(10.99,4),
-        :created_at  => Time.now,
-        :updated_at  => Time.now,
-      })
-      ir.add_item(i)
-    end
-    se.items = ir
+    se.merchants = merchant_repository
+    se.items = item_repository
+
+    binding.pry
     return se
   end
+
+  def load_merchant_repository(merchants_data_path)
+    mr = MerchantRepository.new
+    all_merchants = CSV.read(merchants_data_path, headers: true, header_converters: :symbol)
+    all_merchants.each do |merchant|
+      m = Merchant.new({
+        :id   => merchant[:id], 
+        :name => merchant[:name]
+        })
+      mr.add_merchant(m)
+    end
+    return mr
+  end
+
+  def load_item_repository(items_data_path)
+    ir = ItemRepository.new
+    all_items = CSV.read(items_data_path, headers: true, header_converters: :symbol)
+    all_items.each do |item|
+      i = Item.new({
+        :id          => item[:id],
+        :name        => item[:name],
+        :description => item[:description],
+        :unit_price  => item[:unit_price],
+        :created_at  => item[:created_at],
+        :updated_at  => item[:updated_at],
+        :merchant_id => item[:merchant_id]
+        })
+      ir.add_item(i)
+    end
+    return ir
+  end
+
+
 end
