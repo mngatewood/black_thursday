@@ -47,6 +47,12 @@ class MerchantRepositoryTest < Minitest::Test
     assert_equal expected, @merchant_repository.merchants
   end
 
+  def test_it_can_return_all_merchants
+    self.add_test_merchants
+    expected = [@merchant_1, @merchant_2, @merchant_3, @merchant_4, @merchant_5]
+    assert_equal expected, @merchant_repository.all
+  end
+
   def test_it_can_find_a_merchant_by_id
     self.add_test_merchants
     assert_equal @merchant_repository.find_by_id(1), @merchant_1
@@ -64,6 +70,7 @@ class MerchantRepositoryTest < Minitest::Test
     self.add_test_merchants
     expected = [@merchant_2, @merchant_3]
     assert_equal expected, @merchant_repository.find_all_by_name("cand")
+    assert_equal [], @merchant_repository.find_all_by_name("notgonnafindit")
   end
   
 end
