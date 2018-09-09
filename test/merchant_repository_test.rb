@@ -80,5 +80,12 @@ class MerchantRepositoryTest < Minitest::Test
     assert_equal 6, @merchant_repository.merchants.last.id
     assert_equal "Nerds Inc.", @merchant_repository.merchants.last.name
   end
+
+  def test_it_can_update_a_merchant_name
+    self.add_test_merchants
+    attributes = {:name => "Candy For Adults"}
+    @merchant_repository.update(3, attributes)
+    assert_equal attributes[:name], @merchant_repository.find_by_id(3)
+  end
   
 end

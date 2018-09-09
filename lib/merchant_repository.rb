@@ -36,4 +36,11 @@ class MerchantRepository
     add_merchant(m)
   end
 
+  def update(id, attributes)
+    m = find_by_id(id)
+    key = attributes.keys.first
+    value = attributes[key]
+    m.send("#{key}=",value)
+  end
+
 end
