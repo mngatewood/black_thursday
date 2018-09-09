@@ -38,11 +38,14 @@ class MerchantRepository
 
   def update(id, attributes)
     m = find_by_id(id)
-    key = attributes.keys.first
-    value = attributes[key]
-    m.send("#{key}=",value)
+    valid_keys = [:name]
+    keys = attributes.keys
+    keys.each do |key|
+      value = attributes[key]
+      valid_keys.include?(key) && m.send("#{key}=",value)
+    end
   end
-
+  
   def delete(id)
     m = find_by_id(id)
     @merchants.delete(m)
