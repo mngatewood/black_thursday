@@ -28,4 +28,14 @@ class SalesAnalystTest < Minitest::Test
     assert_equal 2.88, @sa.average_items_per_merchant
   end
 
+  def test_it_returns_a_hash_of_number_of_items_sold_for_each_merchant
+    assert_instance_of Hash, @sa.items_per_merchant
+    assert_equal 475, @sa.items_per_merchant.keys.length
+    assert_equal ["12334141", 1], @sa.items_per_merchant.first
+  end
+
+  def test_it_returns_standard_deviation
+    assert_equal 3.26, @sa.average_items_per_merchant_standard_deviation
+  end
+
 end
