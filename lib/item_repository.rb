@@ -27,6 +27,10 @@ class ItemRepository
     end
   end
 
-
+  def find_all_by_price(price)
+    items.find_all do |item|
+      item.unit_price_to_dollars == price.to_f
+    end
+  end
 
 end

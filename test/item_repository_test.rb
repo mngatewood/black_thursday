@@ -28,7 +28,7 @@ class ItemRepositoryTest < Minitest::Test
     @item_3 = Item.new({:id => 3, 
                         :name => "Book",
                         :description => "You can write about it",
-                        :unit_price => BigDecimal.new(14.99,4),
+                        :unit_price => BigDecimal.new(10.99,4),
                         :created_at => Time.now,
                         :updated_at => Time.now,
                         :merchant_id => 3
@@ -110,6 +110,11 @@ class ItemRepositoryTest < Minitest::Test
     assert_equal [], @ir.find_all_with_description("notgonnafindit")
   end
 
-
+  def test_it_can_find_all_items_by_price
+    self.add_test_items
+    expected = [@item_1, @item_3]
+    assert_equal expected, @ir.find_all_by_price(10.99)
+    assert_equal [], @ir.find_all_by_price(14.99)
+  end
 
 end
