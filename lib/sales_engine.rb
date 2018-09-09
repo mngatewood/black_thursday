@@ -46,7 +46,7 @@ class SalesEngine
         :id          => item[:id],
         :name        => item[:name],
         :description => item[:description],
-        :unit_price  => item[:unit_price],
+        :unit_price  => BigDecimal.new(item[:unit_price].to_i/100,4),
         :created_at  => item[:created_at],
         :updated_at  => item[:updated_at],
         :merchant_id => item[:merchant_id]
