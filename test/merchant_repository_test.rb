@@ -10,7 +10,7 @@ class MerchantRepositoryTest < Minitest::Test
     @merchant_repository = MerchantRepository.new
     @merchant_1 = Merchant.new({:id => 1, :name => "Shopin1901"})
     @merchant_2 = Merchant.new({:id => 2, :name => "Candisart"})
-    @merchant_3 = Merchant.new({:id => 3, :name => "MiniatureBikez"})
+    @merchant_3 = Merchant.new({:id => 3, :name => "Not Candy Crack"})
     @merchant_4 = Merchant.new({:id => 4, :name => "LolaMarleys"})
     @merchant_5 = Merchant.new({:id => 5, :name => "Turing School"})
   end
@@ -50,11 +50,20 @@ class MerchantRepositoryTest < Minitest::Test
   def test_it_can_find_a_merchant_by_id
     self.add_test_merchants
     assert_equal @merchant_repository.find_by_id(1), @merchant_1
+    assert_nil @merchant_repository.find_by_id(0)
+
   end
   
-  def test_it_can_find_a_merchant_by_name
+  def test_it_can_find_a_single_merchant_by_name
     self.add_test_merchants
-    assert_equal @merchant_repository.find_by_name("Candisart"), @merchant_2
+    assert_equal @merchant_2, @merchant_repository.find_by_name("Candisart")
+    assert_nil @merchant_repository.find_by_name("Not A Real Merchant")
+  end
+  
+  def test_it_can_find_all_merchants_by_partial_name
+    self.add_test_merchants
+    expected = [@merchant_2, @merchant_3]
+    assert_equal expected, @merchant_repository.find_all_by_name("cand")
   end
   
 end
