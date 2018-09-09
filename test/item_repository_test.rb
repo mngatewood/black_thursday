@@ -103,6 +103,13 @@ class ItemRepositoryTest < Minitest::Test
     assert_nil @ir.find_by_name("Not A Real Item")
   end
   
+  def test_it_can_find_all_items_by_partial_description
+    self.add_test_items
+    expected = [@item_1, @item_2, @item_4]
+    assert_equal expected, @ir.find_all_with_description("things")
+    assert_equal [], @ir.find_all_with_description("notgonnafindit")
+  end
+
 
 
 end
