@@ -17,8 +17,6 @@ class SalesEngine
 
     se.merchants = merchant_repository
     se.items = item_repository
-
-    binding.pry
     return se
   end
 
