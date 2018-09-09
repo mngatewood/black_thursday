@@ -37,14 +37,22 @@ class MerchantRepository
   end
 
   def update(id, attributes)
-    m = find_by_id(id)
-    valid_keys = [:name]
+    merchant = find_by_id(id)
     keys = attributes.keys
+    valid_keys = [:name]
+    invalid_keys = keys - valid_keys
+    invalid_keys.length == 0 ? 
+      update_merchant_attributes(merchant, attributes, keys) :
+      "Invalid key(s): #{invalid_keys.join(", ")}"
+  end
+    
+  def update_merchant_attributes(merchant, attributes, keys)
     keys.each do |key|
       value = attributes[key]
-      valid_keys.include?(key) && m.send("#{key}=",value)
+      merchant.send("#{key}=",value)
     end
   end
+
   
   def delete(id)
     m = find_by_id(id)
