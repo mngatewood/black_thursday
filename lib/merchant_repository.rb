@@ -29,4 +29,11 @@ class MerchantRepository
     end
   end
 
+  def create(attributes)
+    id = @merchants.map{|merchant|merchant.id}.max + 1
+    attributes[:id] = id
+    m = Merchant.new(attributes)
+    add_merchant(m)
+  end
+
 end

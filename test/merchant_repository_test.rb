@@ -72,5 +72,13 @@ class MerchantRepositoryTest < Minitest::Test
     assert_equal expected, @merchant_repository.find_all_by_name("cand")
     assert_equal [], @merchant_repository.find_all_by_name("notgonnafindit")
   end
+
+  def test_it_can_create_a_new_merchant
+    self.add_test_merchants
+    attributes = {:name => "Nerds Inc."}
+    @merchant_repository.create(attributes)
+    assert_equal 6, @merchant_repository.merchants.last.id
+    assert_equal "Nerds Inc.", @merchant_repository.merchants.last.name
+  end
   
 end
