@@ -1,6 +1,11 @@
 require 'pry'
 require 'csv'
 require 'bigdecimal'
+require_relative './item'
+require_relative './merchant'
+require_relative './item_repository'
+require_relative './merchant_repository'
+
 class SalesEngine
   attr_accessor :merchants,
                 :items
