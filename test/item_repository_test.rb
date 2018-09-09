@@ -5,7 +5,6 @@ require 'time'
 require_relative '../lib/item_repository'
 require_relative '../lib/item'
 
-
 class ItemRepositoryTest < Minitest::Test
 
   def setup
@@ -174,6 +173,11 @@ class ItemRepositoryTest < Minitest::Test
 
   end
 
-
+  def test_it_can_delete_an_item_by_id
+    self.add_test_items
+    @ir.delete(1)
+    assert_nil @ir.find_by_id(1)
+    assert_nil @ir.find_by_name("Pencil")
+  end
 
 end

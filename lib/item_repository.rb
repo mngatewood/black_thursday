@@ -70,4 +70,11 @@ class ItemRepository
     item.updated_at = "2018-09-10 00:00:00 -0600"
   end
 
+  def delete(id)
+    item = find_by_id(id)
+    @items.delete(item)
+  end
+
+
+
 end
