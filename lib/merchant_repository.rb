@@ -43,4 +43,9 @@ class MerchantRepository
     m.send("#{key}=",value)
   end
 
+  def delete(id)
+    m = find_by_id(id)
+    @merchants.delete(m)
+  end
+
 end

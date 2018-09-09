@@ -81,11 +81,18 @@ class MerchantRepositoryTest < Minitest::Test
     assert_equal "Nerds Inc.", @merchant_repository.merchants.last.name
   end
 
-  def test_it_can_update_a_merchant_name
+  def test_it_can_update_merchant_attributes
     self.add_test_merchants
     attributes = {:name => "Candy For Adults"}
     @merchant_repository.update(3, attributes)
-    assert_equal attributes[:name], @merchant_repository.find_by_id(3)
+    assert_equal "Candy For Adults", @merchant_repository.find_by_id(3).name
+  end
+
+  def test_it_can_delete_a_merchant_by_id
+    self.add_test_merchants
+    @merchant_repository.delete(1)
+    assert_nil @merchant_repository.find_by_id(1)
+    assert_nil @merchant_repository.find_by_name("Shopin1901")
   end
   
 end
