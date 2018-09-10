@@ -70,7 +70,7 @@ class SalesAnalyst
     sum_of_prices = array_of_prices.inject(0){|sum, price|sum + price}
     return sum_of_prices / items.all.length
   end
-  
+
   def average_item_price_standard_deviation
     mean = average_item_price
     all_prices = items.all.map{|item|item.unit_price}
