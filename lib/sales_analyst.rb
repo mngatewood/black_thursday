@@ -58,4 +58,11 @@ class SalesAnalyst
     return total_all_prices / all_items.length
   end
 
+  def average_item_price_per_merchant
+    sum_of_averages = merchants.all.inject(0) do |sum, merchant|
+      sum + average_item_price_for_merchant(merchant.id.to_s)
+    end
+    return sum_of_averages / merchants.all.length
+  end
+
 end
