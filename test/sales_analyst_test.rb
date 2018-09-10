@@ -58,27 +58,34 @@ class SalesAnalystTest < Minitest::Test
     assert_equal expected, @sa.average_item_price_for_merchant(12334159)
   end
 
+  # def test_it_can_return_average_unit_price_for_another_given_merchant
+  #   expected = BigDecimal.new(16.66, 4)
+  #   assert_equal expected, @sa.average_item_price_for_merchant(12334105)
+  # end
+
   def test_it_returns_average_price_of_items_per_merchant
-    assert_equal 350.155998941055, @sa.average_item_price_per_merchant.to_f
+    assert_equal 350.155998941055, @sa.average_average_item_price_per_merchant.to_f
   end
 
-  # def test_it_returns_a_hash_of_average_item_price_for_each_merchant
-  #   expected = ["12334141", BigDecimal.new(12.0, 4)]
-  #   assert_instance_of Hash, @sa.item_price_per_merchant
-  #   assert_equal 475, @sa.item_price_per_merchant.keys.length
-  #   assert_equal expected, @sa.item_price_per_merchant.first
-  # end
+  def test_it_returns_the_average_price_of_all_items
+    assert_equal 250.92904169714703, @sa.average_item_price.to_f
+  end
 
-  # def test_it_returns_standard_deviation_of_item_price
-  #   assert_equal 4608.0, @sa.average_item_price_per_merchant_standard_deviation.to_f
-  # end
+  def test_it_returns_standard_deviation_of_item_price
+    assert_equal 2901.0, @sa.average_item_price_standard_deviation.to_f
+  end
 
-  # def test_it_returns_an_array_of_merchant_ids_that_sell_the_most_expensive_items
-  #   assert_equal [], @sa.merchant_ids_with_high_item_price
-  # end
-
-  # def test_it_returns_an_array_of_merchants_that_sell_the_most_expensive_items
-  #   assert_equal [], @sa.merchant_ids_with_high_item_price
-  # end
+  def test_it_returns_items_two_standard_deviations_above_average_price
+    threshold = 6052.929041697147
+    assert_equal 5, @sa.golden_items.length
+    assert_instance_of Item, @sa.golden_items.first
+    assert_equal "263410685", @sa.golden_items.first.id
+    assert_equal "263558812", @sa.golden_items.last.id
+    assert @sa.golden_items[0].unit_price > threshold
+    assert @sa.golden_items[1].unit_price > threshold
+    assert @sa.golden_items[2].unit_price > threshold
+    assert @sa.golden_items[3].unit_price > threshold
+    assert @sa.golden_items[4].unit_price > threshold
+  end
 
 end
