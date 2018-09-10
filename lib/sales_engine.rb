@@ -25,7 +25,7 @@ class SalesEngine
     all_merchants = CSV.read(merchants_data_path, headers: true, header_converters: :symbol)
     all_merchants.each do |merchant|
       m = Merchant.new({
-        :id   => merchant[:id], 
+        :id   => merchant[:id],
         :name => merchant[:name]
         })
       mr.add_merchant(m)
@@ -50,6 +50,4 @@ class SalesEngine
     end
     return ir
   end
-
-
 end

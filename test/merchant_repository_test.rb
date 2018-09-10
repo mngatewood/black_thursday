@@ -28,13 +28,13 @@ class MerchantRepositoryTest < Minitest::Test
   end
 
   def test_it_starts_with_no_merchants
-    assert_equal [], @mr.merchants
+    assert_equal [], @mr.collection
   end
 
   def test_can_add_a_merchant
     m = Merchant.new({:id => 5, :name => "Turing School"})
     @mr.add_merchant(m)
-    assert_equal [m], @mr.merchants
+    assert_equal [m], @mr.collection
   end
 
   def test_can_add_several_merchants
@@ -44,7 +44,7 @@ class MerchantRepositoryTest < Minitest::Test
     @mr.add_merchant(@merchant_4)
     @mr.add_merchant(@merchant_5)
     expected = [@merchant_1, @merchant_2, @merchant_3, @merchant_4, @merchant_5]
-    assert_equal expected, @mr.merchants
+    assert_equal expected, @mr.collection
   end
 
   def test_it_can_return_all_merchants
@@ -59,13 +59,13 @@ class MerchantRepositoryTest < Minitest::Test
     assert_nil @mr.find_by_id(0)
 
   end
-  
+
   def test_it_can_find_a_single_merchant_by_name
     self.add_test_merchants
     assert_equal @merchant_2, @mr.find_by_name("Candisart")
     assert_nil @mr.find_by_name("Not A Real Merchant")
   end
-  
+
   def test_it_can_find_all_merchants_by_partial_name
     self.add_test_merchants
     expected = [@merchant_2, @merchant_3]
@@ -77,8 +77,8 @@ class MerchantRepositoryTest < Minitest::Test
     self.add_test_merchants
     attributes = {:name => "Nerds Inc."}
     @mr.create(attributes)
-    assert_equal 6, @mr.merchants.last.id
-    assert_equal "Nerds Inc.", @mr.merchants.last.name
+    assert_equal 6, @mr.collection.last.id
+    assert_equal "Nerds Inc.", @mr.collection.last.name
   end
 
   def test_it_can_update_merchant_attributes
@@ -94,5 +94,5 @@ class MerchantRepositoryTest < Minitest::Test
     assert_nil @mr.find_by_id(1)
     assert_nil @mr.find_by_name("Shopin1901")
   end
-  
+
 end
