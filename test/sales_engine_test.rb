@@ -51,7 +51,7 @@ class SalesEngineTest < Minitest::Test
   end
 
   def test_it_creates_a_sales_analyst
-    sa = SalesAnalyst.new(@se)
+    sa = @se.analyst
     assert_instance_of ItemRepository, sa.items
     assert_equal 1367, sa.items.collection.length
     assert_instance_of MerchantRepository, sa.merchants

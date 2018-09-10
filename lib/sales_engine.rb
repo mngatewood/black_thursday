@@ -7,13 +7,18 @@ require_relative './item_repository'
 require_relative './merchant_repository'
 
 class SalesEngine
-  attr_accessor :merchants,
-                :items
-
+  attr_accessor :items,
+                :merchants
+                
   def initialize
-    @merchants = nil
     @items = nil
+    @merchants = nil
   end
+
+  def inspect
+    "#<#{self.class} #{@collection.size} rows>"
+  end
+
 
   def self.from_csv(repositories)
     se = SalesEngine.new
@@ -54,5 +59,9 @@ class SalesEngine
       ir.add_item(i)
     end
     return ir
+  end
+
+  def analyst
+    SalesAnalyst.new(@items, @merchants)
   end
 end
