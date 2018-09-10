@@ -10,6 +10,10 @@ class MerchantRepository
     @collection = []
   end
 
+  def inspect
+    "#<#{self.class} #{@collection.size} rows>"
+  end
+
   def add_merchant(merchant)
     @collection << merchant
   end

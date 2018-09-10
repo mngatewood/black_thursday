@@ -22,8 +22,8 @@ class SalesAnalystTest < Minitest::Test
   def test_it_takes_in_arguments
     assert_instance_of ItemRepository, @sa.items
     assert_instance_of MerchantRepository, @sa.merchants
-    assert_equal 1367, @sa.items.items.length
-    assert_equal 475, @sa.merchants.merchants.length
+    assert_equal 1367, @sa.items.collection.length
+    assert_equal 475, @sa.merchants.collection.length
   end
 
   def test_it_returns_average_number_of_items_per_merchant
