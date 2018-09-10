@@ -5,10 +5,15 @@ class SalesAnalyst
   attr_reader :items,
               :merchants
 
-  def initialize(sales_engine)
-    @items      = sales_engine.items
-    @merchants  = sales_engine.merchants
+  def initialize(items, merchants)
+    @items      = items
+    @merchants  = merchants
   end
+
+  def inspect
+    "#<#{self.class} #{@collection.size} rows>"
+  end
+
 
   def average_items_per_merchant
     item_count = items.all.length.to_f
@@ -58,7 +63,7 @@ class SalesAnalyst
     return total_all_prices / all_items_for_merchant.length
   end
 
-  def average_average_item_price_per_merchant
+  def average_average_price_per_merchant
     sum_of_averages = merchants.all.inject(0) do |sum, merchant|
       sum + average_item_price_for_merchant(merchant.id.to_s)
     end

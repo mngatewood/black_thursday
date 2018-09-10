@@ -12,7 +12,7 @@ class SalesAnalystTest < Minitest::Test
       :items     => "./data/items.csv",
       :merchants => "./data/merchants.csv",
     })
-    @sa = SalesAnalyst.new(@se)
+    @sa = @se.analyst
   end
 
   def test_it_exists
@@ -64,7 +64,7 @@ class SalesAnalystTest < Minitest::Test
   # end
 
   def test_it_returns_average_price_of_items_per_merchant
-    assert_equal 350.155998941055, @sa.average_average_item_price_per_merchant.to_f
+    assert_equal 350.155998941055, @sa.average_average_price_per_merchant.to_f
   end
 
   def test_it_returns_the_average_price_of_all_items
