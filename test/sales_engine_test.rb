@@ -1,35 +1,34 @@
 require 'minitest/autorun'
 require 'minitest/pride'
 require_relative '../lib/sales_engine'
-require_relative '../lib/merchant_repository'
 require_relative '../lib/merchant'
 require_relative '../lib/item'
 require_relative '../lib/item_repository'
-
-
+require_relative '../lib/merchant_repository'
+require_relative '../lib/sales_analyst'
 
 class SalesEngineTest < Minitest::Test
-  def test_it_exist
-    se = SalesEngine.from_csv({
+
+  def setup
+    @se = SalesEngine.from_csv({
       :items     => "./data/items.csv",
       :merchants => "./data/merchants.csv",
     })
-    assert_instance_of SalesEngine, se
+  end
+
+  def test_it_exist
+    assert_instance_of SalesEngine, @se
   end
 
   def test_creates_instance_of_merchant_repository
-    se = SalesEngine.from_csv({
-      :items     => "./data/items.csv",
-      :merchants => "./data/merchants.csv",
-    })
-    assert_instance_of MerchantRepository, se.merchants
-    assert_equal 475, se.merchants.merchants.length
+    assert_instance_of MerchantRepository, @se.merchants
+    assert_equal 475, @se.merchants.merchants.length
   end
 
   def test_it_starts_with_no_attributes
-    se = SalesEngine.new
-    assert_nil se.merchants
-    assert_nil se.items
+    @se = SalesEngine.new
+    assert_nil @se.merchants
+    assert_nil @se.items
   end
 
   def test_it_loads_merchants_into_merchant_repository
@@ -40,12 +39,8 @@ class SalesEngineTest < Minitest::Test
   end
 
   def test_creates_instance_of_item_repository
-    se = SalesEngine.from_csv({
-      :items     => "./data/items.csv",
-      :merchants => "./data/merchants.csv",
-    })
-    assert_instance_of ItemRepository, se.items
-    assert_equal 1367, se.items.items.length
+    assert_instance_of ItemRepository, @se.items
+    assert_equal 1367, @se.items.items.length
   end
 
   def test_it_loads_items_into_item_repository
@@ -53,6 +48,14 @@ class SalesEngineTest < Minitest::Test
     ir = se.load_item_repository("./data/items.csv")
     assert_instance_of ItemRepository, ir
     assert_equal 1367, ir.items.length
+  end
+
+  def test_it_creates_a_sales_analyst
+    sa = SalesAnalyst.new(@se)
+    assert_instance_of ItemRepository, sa.items
+    assert_equal 1367, sa.items.items.length
+    assert_instance_of MerchantRepository, sa.merchants
+    assert_equal 475, sa.merchants.merchants.length
   end
 
 end
