@@ -36,7 +36,7 @@ class SalesAnalystTest < Minitest::Test
     assert_equal ["12334141", 1], @sa.items_per_merchant.first
   end
 
-  def test_it_returns_standard_deviation
+  def test_it_returns_standard_deviation_of_items_sold
     assert_equal 3.26, @sa.average_items_per_merchant_standard_deviation
   end
 
@@ -61,5 +61,24 @@ class SalesAnalystTest < Minitest::Test
   def test_it_returns_average_price_of_items_per_merchant
     assert_equal 350.155998941055, @sa.average_item_price_per_merchant.to_f
   end
+
+  # def test_it_returns_a_hash_of_average_item_price_for_each_merchant
+  #   expected = ["12334141", BigDecimal.new(12.0, 4)]
+  #   assert_instance_of Hash, @sa.item_price_per_merchant
+  #   assert_equal 475, @sa.item_price_per_merchant.keys.length
+  #   assert_equal expected, @sa.item_price_per_merchant.first
+  # end
+
+  # def test_it_returns_standard_deviation_of_item_price
+  #   assert_equal 4608.0, @sa.average_item_price_per_merchant_standard_deviation.to_f
+  # end
+
+  # def test_it_returns_an_array_of_merchant_ids_that_sell_the_most_expensive_items
+  #   assert_equal [], @sa.merchant_ids_with_high_item_price
+  # end
+
+  # def test_it_returns_an_array_of_merchants_that_sell_the_most_expensive_items
+  #   assert_equal [], @sa.merchant_ids_with_high_item_price
+  # end
 
 end

@@ -65,4 +65,43 @@ class SalesAnalyst
     return sum_of_averages / merchants.all.length
   end
 
+  def average_item_price_per_merchant_standard_deviation
+    mean = average_item_price_per_merchant
+    diff_from_mean = item_price_per_merchant.values.map{|items|items - mean}
+    diff_squared = diff_from_mean.map{|difference|difference ** 2}
+    sum_of_diff_squared = diff_squared.inject(0){|sum, diff|sum + diff}
+    average_diff = sum_of_diff_squared / (merchants.all.length - 1)
+    return BigDecimal.new(Math.sqrt(average_diff), 4)
+  end
+
+  def item_price_per_merchant
+    merchant_ids = items.all.map{|item|item.merchant_id}
+    average_prices = Hash.new(0)
+    merchant_ids.each do |merchant_id|
+      average_price = average_item_price_for_merchant(merchant_id.to_s)
+      average_prices[merchant_id.to_s] = average_price
+    end
+    return average_prices
+  end
+
+  # def merchant_ids_with_high_item_price
+  #   top_merchant_ids = []
+  #   item_price_per_merchant.keys.each do |merchant_id|
+  #     average_price = item_price_per_merchant[merchant_id]
+  #     threshold = average_item_price_per_merchant + (average_item_price_per_merchant_standard_deviation * 2)
+  #     if average_price > threshold
+  #       top_merchant_ids << merchant_id
+  #     end
+  #   end
+  #   return top_merchant_ids
+  # end
+
+  # def merchants_with_high_item_prices
+  #   top_merchants = []
+  #   merchant_ids_with_high_item_count.map do |merchant_id|
+  #     top_merchants << merchants.find_by_id(merchant_id)
+  #   end
+  #   return top_merchants
+  # end
+
 end
