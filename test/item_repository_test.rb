@@ -157,12 +157,14 @@ class ItemRepositoryTest < Minitest::Test
                   :description => "It's a pencil you don't have to sharpen",
                   :unit_price => BigDecimal.new(4.99,4),
                   }
-    @ir.update(1, attributes)
     item = @ir.find_by_id(1)
+    original_udpated_at = item.updated_at
+    @ir.update(1, attributes)
     assert_equal "Mechanical Pencil", item.name
     assert_equal "It's a pencil you don't have to sharpen", item.description
     assert_equal  BigDecimal.new(4.99,4), item.unit_price
-    assert_equal  "2018-09-10 00:00:00 -0600", item.updated_at.to_s
+    assert_instance_of Time, item.updated_at
+    refute_equal original_udpated_at, item.updated_at
 
     attributes = {:name => "Paper",
                   :weight => "20lb",
