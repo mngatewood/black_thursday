@@ -39,7 +39,7 @@ class SalesEngine
         :id   => merchant[:id],
         :name => merchant[:name]
         })
-      mr.add_merchant(m)
+      mr.add_to_collection(m)
     end
     return mr
   end
@@ -57,7 +57,7 @@ class SalesEngine
         :updated_at  => Time.parse(item[:updated_at]),
         :merchant_id => item[:merchant_id]
         })
-      ir.add_item(i)
+      ir.add_to_collection(i)
     end
     return ir
   end
