@@ -15,7 +15,7 @@ class SalesEngineTest < Minitest::Test
       :merchants => "./data/merchants.csv",
     })
   end
-
+  
   def test_it_exist
     assert_instance_of SalesEngine, @se
   end
@@ -51,11 +51,19 @@ class SalesEngineTest < Minitest::Test
   end
 
   def test_it_creates_a_sales_analyst
-    sa = SalesAnalyst.new(@se)
+    sa = @se.analyst
     assert_instance_of ItemRepository, sa.items
     assert_equal 1367, sa.items.collection.length
     assert_instance_of MerchantRepository, sa.merchants
     assert_equal 475, sa.merchants.collection.length
+  end
+
+  def test_it_converts_unit_price_string_to_a_big_decimal
+    @se = SalesEngine.new
+    price_string_1 = BigDecimal(29.99, 4)
+    price_string_2 = BigDecimal(9.99, 3)
+    assert_equal price_string_1, @se.convert_integer_to_big_decimal(2999)
+    assert_equal price_string_2, @se.convert_integer_to_big_decimal(999)
   end
 
 end

@@ -12,7 +12,7 @@ class SalesAnalystTest < Minitest::Test
       :items     => "./data/items.csv",
       :merchants => "./data/merchants.csv",
     })
-    @sa = SalesAnalyst.new(@se)
+    @sa = @se.analyst
   end
 
   def test_it_exists
@@ -58,21 +58,21 @@ class SalesAnalystTest < Minitest::Test
     assert_equal expected, @sa.average_item_price_for_merchant(12334159)
   end
 
-  # def test_it_can_return_average_unit_price_for_another_given_merchant
-  #   expected = BigDecimal.new(16.66, 4)
-  #   assert_equal expected, @sa.average_item_price_for_merchant(12334105)
-  # end
+  def test_it_can_return_average_unit_price_for_another_given_merchant
+    expected = BigDecimal.new(16.66, 4)
+    assert_equal expected, @sa.average_item_price_for_merchant(12334105)
+  end
 
   def test_it_returns_average_price_of_items_per_merchant
-    assert_equal 350.155998941055, @sa.average_average_item_price_per_merchant.to_f
+    assert_equal 350.29, @sa.average_average_price_per_merchant.to_f
   end
 
   def test_it_returns_the_average_price_of_all_items
-    assert_equal 250.92904169714703, @sa.average_item_price.to_f
+    assert_equal 251.05510607168983, @sa.average_item_price.to_f
   end
 
   def test_it_returns_standard_deviation_of_item_price
-    assert_equal 2901.0, @sa.average_item_price_standard_deviation.to_f
+    assert_equal 2900.99, @sa.average_item_price_standard_deviation.to_f
   end
 
   def test_it_returns_items_two_standard_deviations_above_average_price

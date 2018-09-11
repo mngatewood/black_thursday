@@ -7,13 +7,18 @@ require_relative './item_repository'
 require_relative './merchant_repository'
 
 class SalesEngine
-  attr_accessor :merchants,
-                :items
-
+  attr_accessor :items,
+                :merchants
+                
   def initialize
-    @merchants = nil
     @items = nil
+    @merchants = nil
   end
+
+  def inspect
+    "#<#{self.class} #{@collection.size} rows>"
+  end
+
 
   def self.from_csv(repositories)
     se = SalesEngine.new
@@ -46,7 +51,7 @@ class SalesEngine
         :id          => item[:id],
         :name        => item[:name],
         :description => item[:description],
-        :unit_price  => BigDecimal.new(item[:unit_price].to_i/100,4),
+        :unit_price  => convert_integer_to_big_decimal(item[:unit_price]),
         :created_at  => item[:created_at],
         :updated_at  => item[:updated_at],
         :merchant_id => item[:merchant_id]
@@ -54,5 +59,14 @@ class SalesEngine
       ir.add_item(i)
     end
     return ir
+  end
+
+  def convert_integer_to_big_decimal(unit_price)
+    unit_price_length = unit_price.to_s.chars.length
+    return BigDecimal.new(unit_price.to_f/100, unit_price_length)
+  end
+
+  def analyst
+    SalesAnalyst.new(@items, @merchants)
   end
 end
