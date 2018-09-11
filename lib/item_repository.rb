@@ -28,10 +28,7 @@ class ItemRepository
   end
 
   def create(attributes)
-    id = @collection.map{|item|item.id}.max + 1
-    attributes[:id] = id
-    item = Item.new(attributes)
-    add_to_collection(item)
+    create_object(attributes, "item")
   end
 
   def update(id, attributes)

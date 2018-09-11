@@ -65,5 +65,18 @@ module Repositories
     end
   end
 
+  def create_object(attributes, type)
+    id = @collection.map{|element|element.id}.max + 1
+    attributes[:id] = id
+    object = get_object_of_type(attributes, type)
+    add_to_collection(object)
+  end
+
+  def get_object_of_type(attributes, type)
+    case type
+    when "item" then Item.new(attributes)
+    when "merchant" then Merchant.new(attributes)
+    end
+  end
 
 end

@@ -15,10 +15,7 @@ class MerchantRepository
   end
 
   def create(attributes)
-    id = @collection.map{|merchant|merchant.id}.max + 1
-    attributes[:id] = id
-    m = Merchant.new(attributes)
-    add_to_collection(m)
+    create_object(attributes, "merchant")
   end
 
   def update(id, attributes)
