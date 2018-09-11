@@ -60,14 +60,14 @@ class SalesAnalyst
     all_items_for_merchant = items.all.find_all{|item|item.merchant_id == merchant_id.to_s}
     all_prices = all_items_for_merchant.map{|item|item.unit_price}
     total_all_prices = all_prices.inject(0){|sum, price|sum + price}
-    return total_all_prices / all_items_for_merchant.length
+    return (total_all_prices / all_items_for_merchant.length).round(2)
   end
 
   def average_average_price_per_merchant
     sum_of_averages = merchants.all.inject(0) do |sum, merchant|
       sum + average_item_price_for_merchant(merchant.id.to_s)
     end
-    return sum_of_averages / merchants.all.length
+    return (sum_of_averages / merchants.all.length).round(2)
   end
 
   def average_item_price
