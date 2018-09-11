@@ -44,10 +44,12 @@ class MerchantRepository
   end
 
   def update_merchant_attributes(merchant, attributes, keys)
-    keys.each do |key|
-      value = attributes[key]
-      merchant.send("#{key}=",value)
+    if merchant
+      keys.each do |key|
+        value = attributes[key]
+        merchant.send("#{key}=",value)
+      end
+      merchant.updated_at = Time.new
     end
-    merchant.updated_at = Time.new
   end
 end
