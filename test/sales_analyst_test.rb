@@ -79,8 +79,8 @@ class SalesAnalystTest < Minitest::Test
     threshold = 6052.929041697147
     assert_equal 5, @sa.golden_items.length
     assert_instance_of Item, @sa.golden_items.first
-    assert_equal "263410685", @sa.golden_items.first.id
-    assert_equal "263558812", @sa.golden_items.last.id
+    assert_equal 263410685, @sa.golden_items.first.id
+    assert_equal 263558812, @sa.golden_items.last.id
     assert @sa.golden_items[0].unit_price > threshold
     assert @sa.golden_items[1].unit_price > threshold
     assert @sa.golden_items[2].unit_price > threshold
