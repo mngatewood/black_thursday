@@ -51,7 +51,7 @@ class SalesEngine
         :id          => item[:id],
         :name        => item[:name],
         :description => item[:description],
-        :unit_price  => BigDecimal.new(item[:unit_price].to_i/100,4),
+        :unit_price  => convert_integer_to_big_decimal(item[:unit_price]),
         :created_at  => item[:created_at],
         :updated_at  => item[:updated_at],
         :merchant_id => item[:merchant_id]
@@ -59,6 +59,11 @@ class SalesEngine
       ir.add_item(i)
     end
     return ir
+  end
+
+  def convert_integer_to_big_decimal(unit_price)
+    unit_price_length = unit_price.to_s.chars.length
+    return BigDecimal.new(unit_price.to_f/100, unit_price_length)
   end
 
   def analyst
