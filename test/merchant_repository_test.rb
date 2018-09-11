@@ -8,11 +8,11 @@ class MerchantRepositoryTest < Minitest::Test
 
   def setup
     @mr = MerchantRepository.new
-    @merchant_1 = Merchant.new({:id => "1", :name => "Shopin1901"})
-    @merchant_2 = Merchant.new({:id => "2", :name => "Candisart"})
-    @merchant_3 = Merchant.new({:id => "3", :name => "Not Candy Crack"})
-    @merchant_4 = Merchant.new({:id => "4", :name => "LolaMarleys"})
-    @merchant_5 = Merchant.new({:id => "5", :name => "Turing School"})
+    @merchant_1 = Merchant.new({:id => 1, :name => "Shopin1901"})
+    @merchant_2 = Merchant.new({:id => 2, :name => "Candisart"})
+    @merchant_3 = Merchant.new({:id => 3, :name => "Not Candy Crack"})
+    @merchant_4 = Merchant.new({:id => 4, :name => "LolaMarleys"})
+    @merchant_5 = Merchant.new({:id => 5, :name => "Turing School"})
   end
 
   def add_test_merchants
@@ -55,7 +55,7 @@ class MerchantRepositoryTest < Minitest::Test
 
   def test_it_can_find_a_merchant_by_id
     self.add_test_merchants
-    assert_equal @mr.find_by_id("1"), @merchant_1
+    assert_equal @mr.find_by_id(1), @merchant_1
     assert_nil @mr.find_by_id(0)
 
   end
