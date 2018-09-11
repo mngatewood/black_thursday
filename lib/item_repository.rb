@@ -15,14 +15,6 @@ class ItemRepository
     "#<#{self.class} #{@collection.size} rows>"
   end
 
-  def add_item(item)
-    @collection << item
-  end
-
-  def find_by_id(id)
-    collection.find{|item|item.id == id}
-  end
-
   def find_all_by_price(price)
     collection.find_all do |item|
       item.unit_price_to_dollars == price.to_f
@@ -39,7 +31,7 @@ class ItemRepository
     id = @collection.map{|item|item.id}.max + 1
     attributes[:id] = id
     item = Item.new(attributes)
-    add_item(item)
+    add_to_collection(item)
   end
 
   def update(id, attributes)
@@ -48,17 +40,8 @@ class ItemRepository
     valid_keys = [:name, :description, :unit_price]
     invalid_keys = keys - valid_keys
     invalid_keys.length == 0 ?
-      update_item_attributes(item, attributes, keys) :
+      update_object_attributes(item, attributes, keys) :
       "Invalid key(s): #{invalid_keys.join(", ")}"
   end
 
-  def update_item_attributes(item, attributes, keys)
-    if item
-      keys.each do |key|
-        value = attributes[key]
-        item.send("#{key}=",value)
-      end
-      item.updated_at = Time.new
-    end
-  end
 end
