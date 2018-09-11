@@ -9,6 +9,7 @@ class ItemRepository
 
   def initialize
     @collection = []
+    @collection_type = "item"
   end
 
   def inspect
@@ -25,20 +26,6 @@ class ItemRepository
     collection.find_all do |item|
       range.include?(item.unit_price_to_dollars)
     end
-  end
-
-  def create(attributes)
-    create_object(attributes, "item")
-  end
-
-  def update(id, attributes)
-    item = find_by_id(id)
-    keys = attributes.keys
-    valid_keys = [:name, :description, :unit_price]
-    invalid_keys = keys - valid_keys
-    invalid_keys.length == 0 ?
-      update_object_attributes(item, attributes, keys) :
-      "Invalid key(s): #{invalid_keys.join(", ")}"
   end
 
 end

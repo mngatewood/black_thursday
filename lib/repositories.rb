@@ -65,17 +65,33 @@ module Repositories
     end
   end
 
-  def create_object(attributes, type)
+  def create(attributes)
     id = @collection.map{|element|element.id}.max + 1
     attributes[:id] = id
-    object = get_object_of_type(attributes, type)
+    object = create_object_of_type(attributes)
     add_to_collection(object)
   end
 
-  def get_object_of_type(attributes, type)
-    case type
+  def create_object_of_type(attributes)
+    case @collection_type
     when "item" then Item.new(attributes)
     when "merchant" then Merchant.new(attributes)
+    end
+  end
+
+  def update(id, attributes)
+    object = find_by_id(id)
+    keys = attributes.keys
+    invalid_keys = keys - get_valid_keys
+    invalid_keys.length == 0 ?
+      update_object_attributes(object, attributes, keys) :
+      "Invalid key(s): #{invalid_keys.join(", ")}"
+  end
+
+  def get_valid_keys
+    case @collection_type
+    when "item" then [:name, :description, :unit_price]
+    when "merchant" then [:name]
     end
   end
 
