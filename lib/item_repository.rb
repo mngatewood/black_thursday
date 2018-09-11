@@ -1,4 +1,5 @@
 require 'pry'
+require 'time'
 require_relative './repositories'
 
 class ItemRepository
@@ -56,6 +57,6 @@ class ItemRepository
       value = attributes[key]
       item.send("#{key}=",value)
     end
-    item.updated_at = "2018-09-10 00:00:00 -0600"
+    item.updated_at = Time.new
   end
 end

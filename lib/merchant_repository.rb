@@ -48,6 +48,6 @@ class MerchantRepository
       value = attributes[key]
       merchant.send("#{key}=",value)
     end
+    merchant.updated_at = Time.new
   end
-
 end

@@ -10,7 +10,7 @@ class Item
                 :updated_at
 
   def initialize(info)
-    @id           = info[:id]
+    @id           = info[:id].to_i
     @name         = info[:name]
     @description  = info[:description]
     @unit_price   = info[:unit_price]
