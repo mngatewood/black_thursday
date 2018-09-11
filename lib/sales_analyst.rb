@@ -47,15 +47,15 @@ class SalesAnalyst
     end
     return top_merchant_ids
   end
-
+  
   def merchants_with_high_item_count
     top_merchants = []
     merchant_ids_with_high_item_count.map do |merchant_id|
-      top_merchants << merchants.find_by_id(merchant_id)
+      top_merchants << merchants.find_by_id(merchant_id.to_i)
     end
     return top_merchants
   end
-
+  
   def average_item_price_for_merchant(merchant_id)
     all_items_for_merchant = items.all.find_all{|item|item.merchant_id == merchant_id.to_s}
     all_prices = all_items_for_merchant.map{|item|item.unit_price}
