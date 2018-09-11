@@ -11,6 +11,8 @@ class InvoiceItemRepository
     @collection = []
   end
 
+  def add_item(invoice_item)
+    @collection << @invoice_item
+  end
 
-  
 end

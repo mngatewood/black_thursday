@@ -46,4 +46,24 @@ module Repositories
       item.item_id == item_id
     end
   end
+
+  def find_by_id(id)
+    collection.find{|element|element.id == id}
+  end
+
+  def add_to_collection(object)
+    @collection << object
+  end
+
+  def update_object_attributes(object, attributes, keys)
+    if object
+      keys.each do |key|
+        value = attributes[key]
+        object.send("#{key}=",value)
+      end
+      object.updated_at = Time.new
+    end
+  end
+
+
 end
