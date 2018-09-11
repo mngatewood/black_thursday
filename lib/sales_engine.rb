@@ -1,6 +1,7 @@
 require 'pry'
 require 'csv'
 require 'bigdecimal'
+require 'time'
 require_relative './item'
 require_relative './merchant'
 require_relative './item_repository'
@@ -9,7 +10,7 @@ require_relative './merchant_repository'
 class SalesEngine
   attr_accessor :items,
                 :merchants
-                
+
   def initialize
     @items = nil
     @merchants = nil
@@ -52,8 +53,8 @@ class SalesEngine
         :name        => item[:name],
         :description => item[:description],
         :unit_price  => convert_integer_to_big_decimal(item[:unit_price]),
-        :created_at  => item[:created_at],
-        :updated_at  => item[:updated_at],
+        :created_at  => Time.parse(item[:created_at]),
+        :updated_at  => Time.parse(item[:updated_at]),
         :merchant_id => item[:merchant_id]
         })
       ir.add_item(i)
