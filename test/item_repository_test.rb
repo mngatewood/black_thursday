@@ -52,11 +52,11 @@ class ItemRepositoryTest < Minitest::Test
   end
 
   def add_test_items
-    @ir.add_item(@item_1)
-    @ir.add_item(@item_2)
-    @ir.add_item(@item_3)
-    @ir.add_item(@item_4)
-    @ir.add_item(@item_5)
+    @ir.add_to_collection(@item_1)
+    @ir.add_to_collection(@item_2)
+    @ir.add_to_collection(@item_3)
+    @ir.add_to_collection(@item_4)
+    @ir.add_to_collection(@item_5)
   end
 
   def test_it_exist
@@ -70,16 +70,16 @@ class ItemRepositoryTest < Minitest::Test
   end
 
   def test_can_add_a_single_item
-    @ir.add_item(@item_1)
+    @ir.add_to_collection(@item_1)
     assert_equal [@item_1], @ir.collection
   end
 
   def test_it_can_add_several_items
-    @ir.add_item(@item_1)
-    @ir.add_item(@item_2)
-    @ir.add_item(@item_3)
-    @ir.add_item(@item_4)
-    @ir.add_item(@item_5)
+    @ir.add_to_collection(@item_1)
+    @ir.add_to_collection(@item_2)
+    @ir.add_to_collection(@item_3)
+    @ir.add_to_collection(@item_4)
+    @ir.add_to_collection(@item_5)
     expected = [@item_1, @item_2, @item_3, @item_4, @item_5]
     assert_equal expected, @ir.collection
   end

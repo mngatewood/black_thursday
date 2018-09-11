@@ -16,11 +16,11 @@ class MerchantRepositoryTest < Minitest::Test
   end
 
   def add_test_merchants
-    @mr.add_merchant(@merchant_1)
-    @mr.add_merchant(@merchant_2)
-    @mr.add_merchant(@merchant_3)
-    @mr.add_merchant(@merchant_4)
-    @mr.add_merchant(@merchant_5)
+    @mr.add_to_collection(@merchant_1)
+    @mr.add_to_collection(@merchant_2)
+    @mr.add_to_collection(@merchant_3)
+    @mr.add_to_collection(@merchant_4)
+    @mr.add_to_collection(@merchant_5)
   end
 
   def test_it_exist
@@ -33,16 +33,16 @@ class MerchantRepositoryTest < Minitest::Test
 
   def test_can_add_a_merchant
     m = Merchant.new({:id => 5, :name => "Turing School"})
-    @mr.add_merchant(m)
+    @mr.add_to_collection(m)
     assert_equal [m], @mr.collection
   end
 
   def test_can_add_several_merchants
-    @mr.add_merchant(@merchant_1)
-    @mr.add_merchant(@merchant_2)
-    @mr.add_merchant(@merchant_3)
-    @mr.add_merchant(@merchant_4)
-    @mr.add_merchant(@merchant_5)
+    @mr.add_to_collection(@merchant_1)
+    @mr.add_to_collection(@merchant_2)
+    @mr.add_to_collection(@merchant_3)
+    @mr.add_to_collection(@merchant_4)
+    @mr.add_to_collection(@merchant_5)
     expected = [@merchant_1, @merchant_2, @merchant_3, @merchant_4, @merchant_5]
     assert_equal expected, @mr.collection
   end
