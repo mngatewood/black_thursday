@@ -18,10 +18,6 @@ class MerchantRepository
     @collection << merchant
   end
 
-  def all
-    collection
-  end
-
   def find_by_id(id)
     collection.find{|merchant|merchant.id == id}
   end
