@@ -8,6 +8,8 @@ require_relative '../lib/invoice_item'
 require_relative '../lib/invoice_item_repository'
 require_relative '../lib/sales_engine'
 require_relative '../lib/sales_analyst'
+# require_relative './XoX'
+# require_relative './XoX_repository'
 
 class SalesEngineTest < Minitest::Test
 
@@ -16,6 +18,7 @@ class SalesEngineTest < Minitest::Test
       :items          => "./data/items.csv",
       :merchants      => "./data/merchants.csv",
       :invoice_items  => "./data/invoice_items.csv"
+      # :Xox          => "./data/XoX.csv"
     })
     @sa = @se.analyst
   end
@@ -83,8 +86,8 @@ class SalesEngineTest < Minitest::Test
     assert_equal 21830, iir.collection.length
   end
 
-  # 
+  # Copy and paste two tests above for XoX
 
-  
+
 
 end
