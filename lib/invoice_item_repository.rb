@@ -7,10 +7,6 @@ class InvoiceItemRepository
 
   attr_reader   :collection
 
-  attr_accessor :quantity,
-                :unit_price,
-                :updated_at
-
   def initialize
     @collection       = []
     @collection_type  = "invoice item"
