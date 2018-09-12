@@ -1,5 +1,9 @@
 module Repositories
 
+  def inspect
+    "#<#{self.class} #{@collection.size} rows>"
+  end
+
   def delete(id)
     x = find_by_id(id)
     @collection.delete(x)
@@ -48,7 +52,7 @@ module Repositories
   end
 
   def find_by_id(id)
-    collection.find{|element|element.id == id}
+    @collection.find{|element|element.id == id}
   end
 
   def add_to_collection(object)
