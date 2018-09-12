@@ -12,10 +12,6 @@ class ItemRepository
     @collection_type = "item"
   end
 
-  def inspect
-    "#<#{self.class} #{@collection.size} rows>"
-  end
-
   def find_all_by_price(price)
     collection.find_all do |item|
       item.unit_price_to_dollars == price.to_f
