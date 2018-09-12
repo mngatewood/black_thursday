@@ -8,17 +8,21 @@ require_relative './merchant'
 require_relative './merchant_repository'
 require_relative './invoice_item'
 require_relative './invoice_item_repository'
+# require_relative './XoX'
+# require_relative './XoX_repository'
 
 class SalesEngine
 
   attr_accessor :items,
                 :merchants,
                 :invoice_items
+              # :XoX
 
   def initialize
     @items          = nil
     @merchants      = nil
     @invoice_items  = nil
+  # @XoX            = nil
   end
 
   def inspect
@@ -31,6 +35,7 @@ class SalesEngine
     se.items = se.load_repository(ItemRepository.new, repositories[:items])
     se.invoice_items = se.load_repository(InvoiceItemRepository.new, repositories[:invoice_items])
     # ---- add new repository here ----
+    # se.XoX = se.load_repository(XoXRepository.new, repositories[:XoX])
     return se
   end
 
@@ -58,6 +63,7 @@ class SalesEngine
     when "MerchantRepository"     then build_merchant_object(data)
     when "InvoiceItemRepository"  then build_invoice_item_object(data)
     # ---- add new repository here ----
+    # when "XoXRepository"          then build_XoX_object(data)
     end
   end
 
@@ -92,8 +98,8 @@ class SalesEngine
       })
   end
 
-  # def build_X_object(data)
-  #   X.new({
+  # def build_XoX_object(data)
+  #   XoX.new({
   #     :id         => data[:id],
   #     :name       => data[:name] 
   #   })
