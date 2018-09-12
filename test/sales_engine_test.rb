@@ -1,18 +1,21 @@
 require 'minitest/autorun'
 require 'minitest/pride'
-require_relative '../lib/sales_engine'
-require_relative '../lib/merchant'
 require_relative '../lib/item'
 require_relative '../lib/item_repository'
+require_relative '../lib/merchant'
 require_relative '../lib/merchant_repository'
+require_relative '../lib/invoice_item'
+require_relative '../lib/invoice_item_repository'
+require_relative '../lib/sales_engine'
 require_relative '../lib/sales_analyst'
 
 class SalesEngineTest < Minitest::Test
 
   def setup
     @se = SalesEngine.from_csv({
-      :items     => "./data/items.csv",
-      :merchants => "./data/merchants.csv",
+      :items          => "./data/items.csv",
+      :merchants      => "./data/merchants.csv",
+      :invoice_items  => "./data/invoice_items.csv"
     })
   end
   
