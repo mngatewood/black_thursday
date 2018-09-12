@@ -69,4 +69,16 @@ class SalesEngineTest < Minitest::Test
     assert_equal price_string_2, @se.convert_integer_to_big_decimal(999)
   end
 
+  def test_creates_instance_of_invoice_item_repository
+    assert_instance_of InvoiceItemRepository, @se.invoice_items
+    assert_equal 21830, @se.invoice_items.collection.length
+  end
+
+  def test_it_loads_invoice_items_into_invoice_item_repository
+    se = SalesEngine.new
+    iir = se.load_invoice_item_repository("./data/invoice_items.csv")
+    assert_instance_of InvoiceItemRepository, iir
+    assert_equal 21830, iir.collection.length
+  end
+
 end
