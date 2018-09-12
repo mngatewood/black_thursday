@@ -41,6 +41,12 @@ module Repositories
     end
   end
 
+  def find_all_by_customer_id(customer_id)
+    all.find_all do |item|
+      item.customer_id.to_i == customer_id
+    end
+  end
+
   def find_all_by_item_id(item_id)
     all.find_all do |item|
       item.item_id == item_id
@@ -64,6 +70,4 @@ module Repositories
       object.updated_at = Time.new
     end
   end
-
-
 end
