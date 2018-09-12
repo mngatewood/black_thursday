@@ -76,6 +76,7 @@ module Repositories
     case @collection_type
     when "item" then Item.new(attributes)
     when "merchant" then Merchant.new(attributes)
+    when "invoice item" then InvoiceItem.new(attributes)
     end
   end
 
@@ -92,6 +93,7 @@ module Repositories
     case @collection_type
     when "item" then [:name, :description, :unit_price]
     when "merchant" then [:name]
+    when "invoice item" then [:quantity, :unit_price]
     end
   end
 
