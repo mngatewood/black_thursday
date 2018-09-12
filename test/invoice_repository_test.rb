@@ -19,8 +19,8 @@ class InvoiceRepositoryTest < Minitest::Test
     })
     @invoice_2= Invoice.new({
       :id          => 4,
-      :customer_id => 5,
-      :merchant_id => 6,
+      :customer_id => 2,
+      :merchant_id => 3,
       :status      => "pending",
       :created_at  => Time.now,
       :updated_at  => Time.now,
@@ -97,7 +97,7 @@ class InvoiceRepositoryTest < Minitest::Test
   def test_it_can_find_all_invoices_by_merchant_id
     self.add_test_invoices
     expected = [@invoice_1, @invoice_2]
-    assert_equal expected, @ir.find_all_by_merchant_id(2)
+    assert_equal expected, @ir.find_all_by_merchant_id(3)
     assert_equal [], @ir.find_all_by_merchant_id(0)
   end
 
@@ -120,7 +120,7 @@ class InvoiceRepositoryTest < Minitest::Test
                 }
     @ir.create(attributes)
     invoice = @ir.collection.last
-    assert_equal 16, invoice.id
+    assert_equal 14, invoice.id
     assert_equal "2018-09-08 00:00:00 -0600", invoice.created_at.to_s
     assert_equal "2018-09-09 00:00:00 -0600", invoice.updated_at.to_s
     assert_equal 18, invoice.merchant_id
@@ -152,7 +152,6 @@ class InvoiceRepositoryTest < Minitest::Test
                 }
     invoice = @ir.find_by_id(2)
     assert_equal "Invalid key(s): weight, merchant_id", @ir.update(2, attributes)
-
   end
 
   def test_it_can_delete_an_invoice_by_id
