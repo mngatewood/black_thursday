@@ -30,6 +30,7 @@ class SalesEngine
     se.merchants = se.load_repository(MerchantRepository.new, repositories[:merchants])
     se.items = se.load_repository(ItemRepository.new, repositories[:items])
     se.invoice_items = se.load_repository(InvoiceItemRepository.new, repositories[:invoice_items])
+    # ---- add new repository here ----
     return se
   end
 
@@ -42,15 +43,21 @@ class SalesEngine
     return repository
   end
 
+  def convert_integer_to_big_decimal(unit_price)
+    unit_price_length = unit_price.to_s.chars.length
+    return BigDecimal.new(unit_price.to_f/100, unit_price_length)
+  end
+
+  def analyst
+    SalesAnalyst.new(@items, @merchants, @invoice_items)
+  end
+
   def get_child_object(repository, data)
-    if repository.class == ItemRepository
-      build_item_object(data)
-    elsif repository.class == MerchantRepository
-      build_merchant_object(data)
-    elsif repository.class == InvoiceItemRepository
-      build_invoice_item_object(data)
-    else
-      return nil
+    case repository.class.to_s
+    when "ItemRepository"         then build_item_object(data)
+    when "MerchantRepository"     then build_merchant_object(data)
+    when "InvoiceItemRepository"  then build_invoice_item_object(data)
+    # ---- add new repository here ----
     end
   end
 
@@ -85,13 +92,11 @@ class SalesEngine
       })
   end
 
-  def convert_integer_to_big_decimal(unit_price)
-    unit_price_length = unit_price.to_s.chars.length
-    return BigDecimal.new(unit_price.to_f/100, unit_price_length)
-  end
-
-  def analyst
-    SalesAnalyst.new(@items, @merchants, @invoice_items)
-  end
+  # def build_X_object(data)
+  #   X.new({
+  #     :id         => data[:id],
+  #     :name       => data[:name] 
+  #   })
+  # end
   
 end
