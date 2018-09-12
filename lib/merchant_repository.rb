@@ -11,8 +11,4 @@ class MerchantRepository
     @collection_type = "merchant"
   end
 
-  def inspect
-    "#<#{self.class} #{@collection.size} rows>"
-  end
-
 end
