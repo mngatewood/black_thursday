@@ -3,17 +3,18 @@ require 'pry'
 class SalesAnalyst
 
   attr_reader :items,
-              :merchants
+              :merchants,
+              :invoice_items
 
-  def initialize(items, merchants)
-    @items      = items
-    @merchants  = merchants
+  def initialize(items, merchants, invoice_items)
+    @items          = items
+    @merchants      = merchants
+    @invoice_items  = invoice_items
   end
 
   def inspect
     "#<#{self.class} #{@collection.size} rows>"
   end
-
 
   def average_items_per_merchant
     item_count = items.all.length.to_f

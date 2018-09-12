@@ -1,18 +1,21 @@
 require 'minitest/autorun'
 require 'minitest/pride'
-require_relative '../lib/sales_engine'
-require_relative '../lib/merchant'
 require_relative '../lib/item'
 require_relative '../lib/item_repository'
+require_relative '../lib/merchant'
 require_relative '../lib/merchant_repository'
+require_relative '../lib/invoice_item'
+require_relative '../lib/invoice_item_repository'
+require_relative '../lib/sales_engine'
 require_relative '../lib/sales_analyst'
 
 class SalesEngineTest < Minitest::Test
 
   def setup
     @se = SalesEngine.from_csv({
-      :items     => "./data/items.csv",
-      :merchants => "./data/merchants.csv",
+      :items          => "./data/items.csv",
+      :merchants      => "./data/merchants.csv",
+      :invoice_items  => "./data/invoice_items.csv"
     })
   end
   
@@ -64,6 +67,18 @@ class SalesEngineTest < Minitest::Test
     price_string_2 = BigDecimal(9.99, 3)
     assert_equal price_string_1, @se.convert_integer_to_big_decimal(2999)
     assert_equal price_string_2, @se.convert_integer_to_big_decimal(999)
+  end
+
+  def test_creates_instance_of_invoice_item_repository
+    assert_instance_of InvoiceItemRepository, @se.invoice_items
+    assert_equal 21830, @se.invoice_items.collection.length
+  end
+
+  def test_it_loads_invoice_items_into_invoice_item_repository
+    se = SalesEngine.new
+    iir = se.load_invoice_item_repository("./data/invoice_items.csv")
+    assert_instance_of InvoiceItemRepository, iir
+    assert_equal 21830, iir.collection.length
   end
 
 end

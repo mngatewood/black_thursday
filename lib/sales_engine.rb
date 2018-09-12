@@ -3,31 +3,36 @@ require 'csv'
 require 'bigdecimal'
 require 'time'
 require_relative './item'
-require_relative './merchant'
 require_relative './item_repository'
+require_relative './merchant'
 require_relative './merchant_repository'
+require_relative './invoice_item'
+require_relative './invoice_item_repository'
 
 class SalesEngine
   attr_accessor :items,
-                :merchants
+                :merchants,
+                :invoice_items
 
   def initialize
-    @items = nil
-    @merchants = nil
+    @items          = nil
+    @merchants      = nil
+    @invoice_items  = nil
   end
 
   def inspect
     "#<#{self.class} #{@collection.size} rows>"
   end
 
-
   def self.from_csv(repositories)
     se = SalesEngine.new
     merchant_repository = se.load_merchant_repository(repositories[:merchants])
     item_repository = se.load_item_repository(repositories[:items])
+    invoice_item_repository = se.load_invoice_item_repository(repositories[:invoice_items])
 
     se.merchants = merchant_repository
     se.items = item_repository
+    se.invoice_items = invoice_item_repository
     return se
   end
 
@@ -39,7 +44,7 @@ class SalesEngine
         :id   => merchant[:id],
         :name => merchant[:name]
         })
-      mr.add_merchant(m)
+      mr.add_to_collection(m)
     end
     return mr
   end
@@ -57,9 +62,27 @@ class SalesEngine
         :updated_at  => Time.parse(item[:updated_at]),
         :merchant_id => item[:merchant_id]
         })
-      ir.add_item(i)
+      ir.add_to_collection(i)
     end
     return ir
+  end
+
+  def load_invoice_item_repository(invoice_items_data_path)
+    iir = InvoiceItemRepository.new
+    all_invoice_items = CSV.read(invoice_items_data_path, headers: true, header_converters: :symbol)
+    all_invoice_items.each do |invoice_item|
+      ii = InvoiceItem.new({
+        :id          => invoice_item[:id],
+        :item_id     => invoice_item[:item_id],
+        :invoice_id  => invoice_item[:invoice_id],
+        :quantity    => invoice_item[:quantity],
+        :unit_price  => convert_integer_to_big_decimal(invoice_item[:unit_price]),
+        :created_at  => Time.parse(invoice_item[:created_at]),
+        :updated_at  => Time.parse(invoice_item[:updated_at]),
+        })
+      iir.add_to_collection(ii)
+    end
+    return iir
   end
 
   def convert_integer_to_big_decimal(unit_price)
@@ -68,6 +91,6 @@ class SalesEngine
   end
 
   def analyst
-    SalesAnalyst.new(@items, @merchants)
+    SalesAnalyst.new(@items, @merchants, @invoice_items)
   end
 end

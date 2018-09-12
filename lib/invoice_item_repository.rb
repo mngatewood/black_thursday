@@ -5,14 +5,15 @@ require_relative './repositories'
 class InvoiceItemRepository
   include Repositories
 
-  attr_reader :collection
+  attr_reader   :collection
 
   def initialize
-    @collection = []
+    @collection       = []
+    @collection_type  = "invoice item"
   end
 
-  def add_item(invoice_item)
-    @collection << @invoice_item
+  def find_all_by_invoice_id(invoice_id)
+    collection.find_all{|element|element.invoice_id == invoice_id}
   end
 
 end
