@@ -12,21 +12,9 @@ class InvoiceRepository
     @collection = []
   end
 
-  def create(attributes)
-    id = @collection.map{|item|item.id}.max + 1
-    attributes[:id] = id
-    invoice = Invoice.new(attributes)
-    add_to_collection(invoice)
+  def find_all_by_status(status)
+    all.find_all do |item|
+      item.status == status
+    end
   end
-
-  def update(id, attributes)
-    invoice = find_by_id(id)
-    keys = attributes.keys
-    valid_keys = [:name]
-    invalid_keys = keys - valid_keys
-    invalid_keys.length == 0 ?
-      update_object_attributes(invoice, attributes, keys) :
-      "Invalid key(s): #{invalid_keys.join(", ")}"
-  end
-
 end

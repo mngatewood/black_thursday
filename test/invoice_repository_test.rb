@@ -21,7 +21,7 @@ class InvoiceRepositoryTest < Minitest::Test
       :id          => 4,
       :customer_id => 2,
       :merchant_id => 3,
-      :status      => "pending",
+      :status      => "completed",
       :created_at  => Time.now,
       :updated_at  => Time.now,
     })
@@ -111,12 +111,11 @@ class InvoiceRepositoryTest < Minitest::Test
   def test_it_can_create_a_new_invoice
     self.add_test_invoices
     attributes = {
-                  :id          => 16,
                   :customer_id => 17,
                   :merchant_id => 18,
                   :status      => "pending",
-                  :created_at  => Time.now,
-                  :updated_at  => Time.now,
+                  :created_at  => "2018-09-08 00:00:00 -0600",
+                  :updated_at  => "2018-09-09 00:00:00 -0600"
                 }
     @ir.create(attributes)
     invoice = @ir.collection.last
@@ -128,30 +127,19 @@ class InvoiceRepositoryTest < Minitest::Test
 
   def test_it_can_update_invoice_attributes
     self.add_test_invoices
-    attributes = {
-                  :id          => 16,
-                  :customer_id => 17,
-                  :merchant_id => 18,
-                  :status      => "pending",
-                  :created_at  => Time.now,
-                  :updated_at  => Time.now,
-                }
-    invoice = @ir.find_by_id(1)
+    attributes = {:status => "pending"}
+    invoice = @ir.find_by_id(4)
     original_udpated_at = invoice.updated_at
-    @ir.update(18, attributes)
+    @ir.update(4, attributes)
     assert_instance_of Time, invoice.updated_at
     refute_equal original_udpated_at, invoice.updated_at
 
     attributes = {
-                  :id          => 16,
                   :customer_id => 17,
-                  :merchant_id => 18,
-                  :status      => "pending",
-                  :created_at  => Time.now,
-                  :updated_at  => Time.now,
+                  :merchant_id => 18
                 }
     invoice = @ir.find_by_id(2)
-    assert_equal "Invalid key(s): weight, merchant_id", @ir.update(2, attributes)
+    assert_equal "Invalid key(s): customer_id, merchant_id", @ir.update(2, attributes)
   end
 
   def test_it_can_delete_an_invoice_by_id
