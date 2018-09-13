@@ -3,19 +3,19 @@ require 'minitest/pride'
 require 'time'
 require 'bigdecimal'
 require_relative '../lib/invoice_item'
-require_relative '../lib/item'
 
 class ItemTest < Minitest::Test
 
   def setup
-    @invoice_item = InvoiceItem.new({:id => 6,
-                                 :item_id => 7,
-                                 :invoice_id => 8,
-                                 :quantity => 1,
-                                 :unit_price => BigDecimal.new(10.99, 4),
-                                 :created_at => Time.new(2018, 9, 10, 0, 0, 0, "-06:00"),
-                                 :updated_at => Time.new(2018, 9, 11, 0, 0, 0, "-06:00")
-                                })
+    @invoice_item = InvoiceItem.new({
+      :id => 6,
+      :item_id => 7,
+      :invoice_id => 8,
+      :quantity => 1,
+      :unit_price => BigDecimal.new(10.99, 4),
+      :created_at => Time.new(2018, 9, 10, 0, 0, 0, "-06:00"),
+      :updated_at => Time.new(2018, 9, 11, 0, 0, 0, "-06:00")
+    })
   end
 
   def test_it_exist
