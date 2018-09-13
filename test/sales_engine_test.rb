@@ -6,6 +6,8 @@ require_relative '../lib/merchant'
 require_relative '../lib/merchant_repository'
 require_relative '../lib/invoice_item'
 require_relative '../lib/invoice_item_repository'
+require_relative '../lib/transaction'
+require_relative '../lib/transaction_repository'
 require_relative '../lib/sales_engine'
 require_relative '../lib/sales_analyst'
 # require_relative './XoX'
@@ -17,7 +19,8 @@ class SalesEngineTest < Minitest::Test
     @se = SalesEngine.from_csv({
       :items          => "./data/items.csv",
       :merchants      => "./data/merchants.csv",
-      :invoice_items  => "./data/invoice_items.csv"
+      :invoice_items  => "./data/invoice_items.csv",
+      :transactions   => "./data/transactions.csv"
       # :Xox          => "./data/XoX.csv"
     })
     @sa = @se.analyst
@@ -84,6 +87,19 @@ class SalesEngineTest < Minitest::Test
     iir = @se.load_repository(InvoiceItemRepository.new, "./data/invoice_items.csv")
     assert_instance_of InvoiceItemRepository, iir
     assert_equal 21830, iir.collection.length
+  end
+
+  # 
+
+  def test_creates_instance_of_transaction_repository
+    assert_instance_of TransactionRepository, @se.transactions
+    assert_equal 4985, @se.transactions.collection.length
+  end
+
+  def test_it_loads_transactions_into_transaction_repository
+    tr = @se.load_repository(TransactionRepository.new, "./data/transactions.csv")
+    assert_instance_of TransactionRepository, tr
+    assert_equal 4985, tr.collection.length
   end
 
   # Copy and paste two tests above for XoX
