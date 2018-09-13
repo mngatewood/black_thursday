@@ -94,7 +94,6 @@ class ItemRepositoryTest < Minitest::Test
     self.add_test_items
     assert_equal @ir.find_by_id(1), @item_1
     assert_nil @ir.find_by_id(0)
-
   end
 
   def test_it_can_find_a_single_item_by_name
@@ -170,7 +169,6 @@ class ItemRepositoryTest < Minitest::Test
                   :weight => "20lb",
                   :merchant_id => 9
                   }
-    item = @ir.find_by_id(2)
     assert_equal "Invalid key(s): weight, merchant_id", @ir.update(2, attributes)
 
   end
