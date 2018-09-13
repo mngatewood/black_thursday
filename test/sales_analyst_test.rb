@@ -71,7 +71,7 @@ class SalesAnalystTest < Minitest::Test
   end
 
   def test_it_returns_the_average_price_of_all_items
-    assert_equal 251.05510607168983, @sa.average_item_price.to_f
+    assert_equal 251.06, @sa.average_item_price.to_f
   end
 
   def test_it_returns_standard_deviation_of_item_price
