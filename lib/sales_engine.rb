@@ -8,16 +8,21 @@ require_relative './merchant'
 require_relative './merchant_repository'
 require_relative './invoice_item'
 require_relative './invoice_item_repository'
+# require_relative './XoX'
+# require_relative './XoX_repository'
 
 class SalesEngine
+
   attr_accessor :items,
                 :merchants,
                 :invoice_items
+              # :XoX
 
   def initialize
     @items          = nil
     @merchants      = nil
     @invoice_items  = nil
+  # @XoX            = nil
   end
 
   def inspect
@@ -26,63 +31,21 @@ class SalesEngine
 
   def self.from_csv(repositories)
     se = SalesEngine.new
-    merchant_repository = se.load_merchant_repository(repositories[:merchants])
-    item_repository = se.load_item_repository(repositories[:items])
-    invoice_item_repository = se.load_invoice_item_repository(repositories[:invoice_items])
-
-    se.merchants = merchant_repository
-    se.items = item_repository
-    se.invoice_items = invoice_item_repository
+    se.merchants = se.load_repository(MerchantRepository.new, repositories[:merchants])
+    se.items = se.load_repository(ItemRepository.new, repositories[:items])
+    se.invoice_items = se.load_repository(InvoiceItemRepository.new, repositories[:invoice_items])
+    # ---- add new repository here ----
+    # se.XoX = se.load_repository(XoXRepository.new, repositories[:XoX])
     return se
   end
 
-  def load_merchant_repository(merchants_data_path)
-    mr = MerchantRepository.new
-    all_merchants = CSV.read(merchants_data_path, headers: true, header_converters: :symbol)
-    all_merchants.each do |merchant|
-      m = Merchant.new({
-        :id   => merchant[:id],
-        :name => merchant[:name]
-        })
-      mr.add_to_collection(m)
+  def load_repository(repository, objects_data_path)
+    all_rows = CSV.read(objects_data_path, headers: true, header_converters: :symbol)
+    all_rows.each do |row|
+      object = get_child_object(repository, row)
+      repository.add_to_collection(object)
     end
-    return mr
-  end
-
-  def load_item_repository(items_data_path)
-    ir = ItemRepository.new
-    all_items = CSV.read(items_data_path, headers: true, header_converters: :symbol)
-    all_items.each do |item|
-      i = Item.new({
-        :id          => item[:id],
-        :name        => item[:name],
-        :description => item[:description],
-        :unit_price  => convert_integer_to_big_decimal(item[:unit_price]),
-        :created_at  => Time.parse(item[:created_at]),
-        :updated_at  => Time.parse(item[:updated_at]),
-        :merchant_id => item[:merchant_id]
-        })
-      ir.add_to_collection(i)
-    end
-    return ir
-  end
-
-  def load_invoice_item_repository(invoice_items_data_path)
-    iir = InvoiceItemRepository.new
-    all_invoice_items = CSV.read(invoice_items_data_path, headers: true, header_converters: :symbol)
-    all_invoice_items.each do |invoice_item|
-      ii = InvoiceItem.new({
-        :id          => invoice_item[:id],
-        :item_id     => invoice_item[:item_id],
-        :invoice_id  => invoice_item[:invoice_id],
-        :quantity    => invoice_item[:quantity],
-        :unit_price  => convert_integer_to_big_decimal(invoice_item[:unit_price]),
-        :created_at  => Time.parse(invoice_item[:created_at]),
-        :updated_at  => Time.parse(invoice_item[:updated_at]),
-        })
-      iir.add_to_collection(ii)
-    end
-    return iir
+    return repository
   end
 
   def convert_integer_to_big_decimal(unit_price)
@@ -93,4 +56,53 @@ class SalesEngine
   def analyst
     SalesAnalyst.new(@items, @merchants, @invoice_items)
   end
+
+  def get_child_object(repository, data)
+    case repository.class.to_s
+    when "ItemRepository"         then build_item_object(data)
+    when "MerchantRepository"     then build_merchant_object(data)
+    when "InvoiceItemRepository"  then build_invoice_item_object(data)
+    # ---- add new repository here ----
+    # when "XoXRepository"          then build_XoX_object(data)
+    end
+  end
+
+  def build_item_object(data)
+    Item.new({
+      :id          => data[:id],
+      :name        => data[:name],
+      :description => data[:description],
+      :unit_price  => convert_integer_to_big_decimal(data[:unit_price]),
+      :created_at  => Time.parse(data[:created_at]),
+      :updated_at  => Time.parse(data[:updated_at]),
+      :merchant_id => data[:merchant_id]
+      })
+  end
+
+  def build_merchant_object(data)
+    Merchant.new({
+      :id   => data[:id],
+      :name => data[:name]
+      })
+  end
+
+  def build_invoice_item_object(data)
+    InvoiceItem.new({
+      :id          => data[:id],
+      :item_id     => data[:item_id],
+      :invoice_id  => data[:invoice_id],
+      :quantity    => data[:quantity],
+      :unit_price  => convert_integer_to_big_decimal(data[:unit_price]),
+      :created_at  => Time.parse(data[:created_at]),
+      :updated_at  => Time.parse(data[:updated_at]),
+      })
+  end
+
+  # def build_XoX_object(data)
+  #   XoX.new({
+  #     :id         => data[:id],
+  #     :name       => data[:name] 
+  #   })
+  # end
+  
 end
