@@ -104,6 +104,7 @@ module Repositories
     when "item" then [:name, :description, :unit_price]
     when "merchant" then [:name]
     when "invoice item" then [:quantity, :unit_price]
+# add new line for repository here
     when "transaction" then [:credit_card_number, :credit_card_expiration_date, :result]
     end
   end
