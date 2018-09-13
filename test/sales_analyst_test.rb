@@ -4,6 +4,8 @@ require_relative '../lib/sales_analyst'
 require_relative '../lib/sales_engine'
 require_relative '../lib/item_repository'
 require_relative '../lib/merchant_repository'
+require_relative '../lib/transaction_repository'
+# require_relative '../lib/new_repository'
 
 class SalesAnalystTest < Minitest::Test
 
@@ -12,6 +14,8 @@ class SalesAnalystTest < Minitest::Test
       :items          => "./data/items.csv",
       :merchants      => "./data/merchants.csv",
       :invoice_items  => "./data/invoice_items.csv",
+      :transactions   => "./data/transactions.csv"
+    # :objects        => "./data/objects.csv"
     })
     @sa = @se.analyst
   end
