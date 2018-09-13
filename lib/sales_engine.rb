@@ -8,6 +8,8 @@ require_relative './merchant'
 require_relative './merchant_repository'
 require_relative './invoice_item'
 require_relative './invoice_item_repository'
+require_relative './transaction'
+require_relative './transaction_repository'
 # require_relative './XoX'
 # require_relative './XoX_repository'
 
@@ -15,13 +17,15 @@ class SalesEngine
 
   attr_accessor :items,
                 :merchants,
-                :invoice_items
+                :invoice_items,
+                :transactions
               # :XoX
 
   def initialize
     @items          = nil
     @merchants      = nil
     @invoice_items  = nil
+    @transactions   = nil
   # @XoX            = nil
   end
 
@@ -34,6 +38,7 @@ class SalesEngine
     se.merchants = se.load_repository(MerchantRepository.new, repositories[:merchants])
     se.items = se.load_repository(ItemRepository.new, repositories[:items])
     se.invoice_items = se.load_repository(InvoiceItemRepository.new, repositories[:invoice_items])
+    se.transactions = se.load_repository(TransactionRepository.new, repositories[:transactions])
     # ---- add new repository here ----
     # se.XoX = se.load_repository(XoXRepository.new, repositories[:XoX])
     return se
@@ -62,6 +67,7 @@ class SalesEngine
     when "ItemRepository"         then build_item_object(data)
     when "MerchantRepository"     then build_merchant_object(data)
     when "InvoiceItemRepository"  then build_invoice_item_object(data)
+    when "TransactionRepository"  then build_transaction_object(data)
     # ---- add new repository here ----
     # when "XoXRepository"          then build_XoX_object(data)
     end
@@ -95,6 +101,18 @@ class SalesEngine
       :unit_price  => convert_integer_to_big_decimal(data[:unit_price]),
       :created_at  => Time.parse(data[:created_at]),
       :updated_at  => Time.parse(data[:updated_at]),
+      })
+  end
+
+  def build_transaction_object(data)
+    Transaction.new({
+      :id                           => data[:id],
+      :invoice_id                   => data[:invoice_id],
+      :credit_card_number           => data[:credit_card_number],
+      :credit_card_expiration_date  => data[:credit_card_expiration_date],
+      :result                       => data[:result],
+      :created_at                   => Time.parse(data[:created_at]),
+      :updated_at                   => Time.parse(data[:updated_at])
       })
   end
 
