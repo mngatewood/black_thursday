@@ -104,4 +104,10 @@ class SalesAnalyst
     return items.all.find_all{|item|item.unit_price > threshold}
   end
 
+  def invoice_paid_in_full?(invoice_id)
+    invoice_transactions = transactions.find_all_by_invoice_id(invoice_id)
+    last_transaction = invoice_transactions.sort_by{|t|t.updated_at}.last
+    last_transaction.result == :success
+  end
+
 end

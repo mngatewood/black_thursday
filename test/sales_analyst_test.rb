@@ -106,4 +106,10 @@ class SalesAnalystTest < Minitest::Test
     assert @sa.golden_items[4].unit_price > threshold
   end
 
+  def test_it_returns_true_if_invoice_is_paid
+    assert @sa.invoice_paid_in_full?(1)
+    refute @sa.invoice_paid_in_full?(290)
+    refute @sa.invoice_paid_in_full?(1752)
+  end
+
 end
