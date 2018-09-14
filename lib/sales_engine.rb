@@ -12,6 +12,8 @@ require_relative './transaction'
 require_relative './transaction_repository'
 require_relative './invoice'
 require_relative './invoice_repository'
+require_relative './customer'
+require_relative './customer_repository'
 # require_relative './XoX'
 # require_relative './XoX_repository'
 
@@ -20,16 +22,18 @@ class SalesEngine
   attr_accessor :items,
                 :merchants,
                 :invoice_items,
+                :invoices,
                 :transactions,
-                :invoices
+                :customers
               # :XoX
 
   def initialize
     @items          = nil
     @merchants      = nil
     @invoice_items  = nil
-    @transactions   = nil
     @invoices       = nil
+    @transactions   = nil
+    @customers      = nil
   # @XoX            = nil
   end
 
@@ -44,6 +48,7 @@ class SalesEngine
     se.invoice_items = se.load_repository(InvoiceItemRepository.new, repositories[:invoice_items])
     se.transactions = se.load_repository(TransactionRepository.new, repositories[:transactions])
     se.invoices = se.load_repository(InvoiceRepository.new, repositories[:invoices])
+    se.customers = se.load_repository(CustomerRepository.new, repositories[:customers])
     # ---- add new repository here ----
     # se.XoX = se.load_repository(XoXRepository.new, repositories[:XoX])
     return se
@@ -55,7 +60,6 @@ class SalesEngine
       object = get_child_object(repository, row)
       repository.add_to_collection(object)
     end
-    # binding.pry
     return repository
   end
 
@@ -65,7 +69,7 @@ class SalesEngine
   end
 
   def analyst
-    SalesAnalyst.new(@items, @merchants, @invoice_items, @invoices)
+    SalesAnalyst.new(@items, @merchants, @invoice_items, @invoices, @transactions, @customers)
     # Enter agrugment for above
   end
 
@@ -74,8 +78,9 @@ class SalesEngine
     when "ItemRepository"         then build_item_object(data)
     when "MerchantRepository"     then build_merchant_object(data)
     when "InvoiceItemRepository"  then build_invoice_item_object(data)
-    when "TransactionRepository"  then build_transaction_object(data)
     when "InvoiceRepository"      then build_invoice_object(data)
+    when "TransactionRepository"  then build_transaction_object(data)
+    when "CustomerRepository"     then build_customer_object(data)
     # ---- add new repository here ----
     # when "XoXRepository"          then build_XoX_object(data)
     end
@@ -123,6 +128,7 @@ class SalesEngine
       :updated_at                   => Time.parse(data[:updated_at])
       })
   end
+
   def build_invoice_object(data)
     Invoice.new({
       :id          => data[:id],
@@ -133,6 +139,17 @@ class SalesEngine
       :updated_at  => Time.parse(data[:updated_at])
       })
   end
+  
+  def build_customer_object(data)
+    Customer.new({
+      :id         => data[:id],
+      :first_name => data[:first_name],
+      :last_name  => data[:last_name],
+      :created_at => Time.parse(data[:created_at]),
+      :updated_at => Time.parse(data[:updated_at])
+      })
+  end
+  
   # def build_XoX_object(data)
   #   XoX.new({
   #     :id         => data[:id],
