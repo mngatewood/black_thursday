@@ -5,13 +5,17 @@ class SalesAnalyst
   attr_reader :items,
               :merchants,
               :invoice_items,
-              :invoices
+              :invoices,
+              :transactions,
+              :customers
 
-  def initialize(items, merchants, invoice_items, invoices)
+  def initialize(items, merchants, invoice_items, invoices, transactions, customers)
     @items          = items
     @merchants      = merchants
     @invoice_items  = invoice_items
     @invoices       = invoices
+    @transactions   = transactions
+    @customers      = customers
   end
 
   def inspect
