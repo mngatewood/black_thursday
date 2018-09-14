@@ -10,7 +10,6 @@ class CustomerRepository
 
   def initialize
     @collection       = []
-    @collection_type  = "customer"
   end
 
   def find_all_by_first_name(first_name)

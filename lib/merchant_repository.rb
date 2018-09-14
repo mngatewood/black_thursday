@@ -8,7 +8,6 @@ class MerchantRepository
 
   def initialize
     @collection = []
-    @collection_type = "merchant"
   end
 
 end

@@ -9,7 +9,6 @@ class ItemRepository
 
   def initialize
     @collection = []
-    @collection_type = "item"
   end
 
   def find_all_by_price(price)

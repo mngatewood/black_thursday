@@ -9,7 +9,6 @@ class InvoiceItemRepository
 
   def initialize
     @collection       = []
-    @collection_type  = "invoice item"
   end
 
 end
