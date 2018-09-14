@@ -93,6 +93,7 @@ module Repositories
     when "invoice item" then InvoiceItem.new(attributes)
     when "transaction" then Transaction.new(attributes)
     when "invoice" then Invoice.new(attributes)
+    when "customer" then Customer.new(attributes)
 # add new line for repository here
     end
   end
@@ -112,8 +113,9 @@ module Repositories
     when "merchant" then [:name]
     when "invoice item" then [:quantity, :unit_price]
     when "invoice" then [:status]
-# add new line for repository here
     when "transaction" then [:credit_card_number, :credit_card_expiration_date, :result]
+    when "customer" then [:first_name, :last_name]
+      # add new line for repository here
     end
   end
 
