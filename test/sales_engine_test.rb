@@ -10,6 +10,8 @@ require_relative '../lib/transaction'
 require_relative '../lib/transaction_repository'
 require_relative '../lib/sales_engine'
 require_relative '../lib/sales_analyst'
+require_relative '../lib/invoice'
+require_relative '../lib/invoice_repository'
 # require_relative './XoX'
 # require_relative './XoX_repository'
 
@@ -20,12 +22,13 @@ class SalesEngineTest < Minitest::Test
       :items          => "./data/items.csv",
       :merchants      => "./data/merchants.csv",
       :invoice_items  => "./data/invoice_items.csv",
-      :transactions   => "./data/transactions.csv"
+      :transactions   => "./data/transactions.csv",
+      :invoices       => "./data/invoices.csv"
       # :Xox          => "./data/XoX.csv"
     })
     @sa = @se.analyst
   end
-  
+
   def test_it_exist
     assert_instance_of SalesEngine, @se
   end
@@ -35,7 +38,7 @@ class SalesEngineTest < Minitest::Test
     assert_nil @se.merchants
     assert_nil @se.items
   end
-  
+
   def test_it_creates_a_sales_analyst
     assert_instance_of ItemRepository, @sa.items
     assert_equal 1367, @sa.items.collection.length
@@ -50,7 +53,7 @@ class SalesEngineTest < Minitest::Test
     assert_equal price_string_2, @se.convert_integer_to_big_decimal(999)
   end
 
-  # 
+  #
 
   def test_creates_instance_of_merchant_repository
     assert_instance_of MerchantRepository, @se.merchants
@@ -63,7 +66,7 @@ class SalesEngineTest < Minitest::Test
     assert_equal 475, mr.collection.length
   end
 
-  # 
+  #
 
   def test_creates_instance_of_item_repository
     assert_instance_of ItemRepository, @se.items
@@ -76,7 +79,7 @@ class SalesEngineTest < Minitest::Test
     assert_equal 1367, ir.collection.length
   end
 
-  # 
+  #
 
   def test_creates_instance_of_invoice_item_repository
     assert_instance_of InvoiceItemRepository, @se.invoice_items
@@ -89,7 +92,7 @@ class SalesEngineTest < Minitest::Test
     assert_equal 21830, iir.collection.length
   end
 
-  # 
+  #
 
   def test_creates_instance_of_transaction_repository
     assert_instance_of TransactionRepository, @se.transactions
@@ -102,6 +105,16 @@ class SalesEngineTest < Minitest::Test
     assert_equal 4985, tr.collection.length
   end
 
+  def test_creates_instance_of_invoice_repository
+    assert_instance_of InvoiceRepository, @se.invoices
+    assert_equal 4985, @se.invoices.collection.length
+  end
+
+  def test_it_loads_invoices_into_invoice_repository
+    ir = @se.load_repository(InvoiceRepository.new, "./data/invoices.csv")
+    assert_instance_of InvoiceRepository, ir
+    assert_equal 4985, ir.collection.length
+  end
   # Copy and paste two tests above for XoX
 
 

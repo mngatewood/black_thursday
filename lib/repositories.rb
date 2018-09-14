@@ -45,6 +45,12 @@ module Repositories
     end
   end
 
+  def find_all_by_customer_id(customer_id)
+    all.find_all do |item|
+      item.customer_id.to_i == customer_id
+    end
+  end
+
   def find_all_by_item_id(item_id)
     all.find_all do |item|
       item.item_id == item_id
@@ -86,6 +92,7 @@ module Repositories
     when "merchant" then Merchant.new(attributes)
     when "invoice item" then InvoiceItem.new(attributes)
     when "transaction" then Transaction.new(attributes)
+    when "invoice" then Invoice.new(attributes)
 # add new line for repository here
     end
   end
@@ -104,6 +111,7 @@ module Repositories
     when "item" then [:name, :description, :unit_price]
     when "merchant" then [:name]
     when "invoice item" then [:quantity, :unit_price]
+    when "invoice" then [:status]
 # add new line for repository here
     when "transaction" then [:credit_card_number, :credit_card_expiration_date, :result]
     end
