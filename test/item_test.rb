@@ -25,15 +25,15 @@ class ItemTest < Minitest::Test
   def test_it_has_attributes
     assert_equal 1, @item.id
     assert_equal "Pencil", @item.name
-    assert_equal "You can use it to write things", item.description
-    assert_equal BigDecimal.new(10.99,4), item.unit_price
-    assert_equal "2018-09-08 00:00:00 -0600", item.created_at.to_s
-    assert_equal "2018-09-09 00:00:00 -0600", item.updated_at.to_s
-    assert_equal 2, item.merchant_id
+    assert_equal "You can use it to write things", @item.description
+    assert_equal BigDecimal.new(10.99,4), @item.unit_price
+    assert_equal "2018-09-08 00:00:00 -0600", @item.created_at.to_s
+    assert_equal "2018-09-09 00:00:00 -0600", @item.updated_at.to_s
+    assert_equal 2, @item.merchant_id
   end
 
   def test_it_returns_price_as_a_float
-    assert_equal 10.99, item.unit_price_to_dollars
+    assert_equal 10.99, @item.unit_price_to_dollars
   end
 
 end
