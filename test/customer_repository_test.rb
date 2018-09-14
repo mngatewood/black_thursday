@@ -112,7 +112,6 @@ class CustomerRepositoryTest < Minitest::Test
     }
     @cr.create(attributes)
     customer = @cr.collection.last
-    binding.pry
     assert_equal 11, customer.id
     assert_equal "John", customer.first_name
     assert_equal "Smith", customer.last_name
@@ -129,14 +128,14 @@ class CustomerRepositoryTest < Minitest::Test
     customer = @cr.find_by_id(10)
     original_udpated_at = customer.updated_at
     @cr.update(10, attributes)
-    assert_equal "Joanne", customer.credit_card_number
-    assert_equal "Adams", customer.credit_card_expiration_date
+    assert_equal "Joanne", customer.first_name
+    assert_equal "Adams", customer.last_name
     refute_equal original_udpated_at, customer.updated_at
 
     attributes = {:id => 1,
                   :created_at => Time.new(2018, 9, 12, 0, 0, 0, "-06:00")
                   }
-    assert_equal "Invalid key(s): id, created_at", @tr.update(6, attributes)
+    assert_equal "Invalid key(s): id, created_at", @cr.update(6, attributes)
   end
 
   def test_it_can_delete_a_customer_by_id
@@ -144,7 +143,5 @@ class CustomerRepositoryTest < Minitest::Test
     @cr.delete(6)
     assert_nil @cr.find_by_id(6)
   end
-
-
 
 end
