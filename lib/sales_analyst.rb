@@ -156,16 +156,25 @@ class SalesAnalyst
     all_bottom_merchants
   end
 
+  def average_invoices_per_day_standard_deviation(invoices_per_day_array)
+    mean = @invoices.all.count/7
+    diff_from_mean = invoices_per_day_array.map{|invoice_count|invoice_count - mean}
+    diff_squared = diff_from_mean.map{|difference|difference ** 2}
+    sum_of_diff_squared = diff_squared.inject(0){|sum, diff|sum + diff}
+    average_diff = sum_of_diff_squared / (invoices_per_day_array.length - 1)
+    return Math.sqrt(average_diff)
+  end
+
   def top_days_by_invoice_count
-    average = @invoices.all.count/7
+    average_invoices_per_day = @invoices.all.count/7
     grouped_by_weekday = @invoices.all.group_by do |invoice|
       invoice.created_at.wday
     end
-    invoices_by_day = grouped_by_weekday.values.map do |invoice_collection|
-      invoice_collection.count
+    invoices_by_day = grouped_by_weekday.values.map do |invoices|
+      invoices.count
     end
-    a = day_nums = grouped_by_weekday.find_all do |weekday, invoices|
-      invoices.count >= average + standard_deviation(invoices_by_day)
+    day_nums = grouped_by_weekday.find_all do |weekday, invoices|
+      invoices.count > average_invoices_per_day + average_invoices_per_day_standard_deviation(invoices_by_day)
     end.to_h.keys
     day_nums.map do |daynumber|
       Date::DAYNAMES[daynumber]
