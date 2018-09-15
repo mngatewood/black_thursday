@@ -97,4 +97,35 @@ class SalesAnalystTest < Minitest::Test
     assert @sa.golden_items[4].unit_price > threshold
   end
 
+  def test_it_returns_the_average_invoices_per_merchant
+    assert_equal 10.49, @sa.average_invoices_per_merchant
+  end
+
+  def test_it_can_return_average_invoices_per_merchant_standard_deviation
+    assert_equal 3.29, @sa.average_invoices_per_merchant_standard_deviation
+  end
+
+  def test_it_returns_top_merchants_by_invoices
+    assert @sa.top_merchants_by_invoice_count.include?(@sa.merchants.find_by_id(12336430))
+    assert @sa.top_merchants_by_invoice_count.include?(@sa.merchants.find_by_id(12334146))
+    assert @sa.top_merchants_by_invoice_count.include?(@sa.merchants.find_by_id(12335213))
+    assert_equal 12, @sa.top_merchants_by_invoice_count.count
+  end
+
+  def test_it_returns_bottom_merchants_by_invoices
+    assert @sa.bottom_merchants_by_invoice_count.include?(@sa.merchants.find_by_id(12334235))
+    assert @sa.bottom_merchants_by_invoice_count.include?(@sa.merchants.find_by_id(12334601))
+    assert @sa.bottom_merchants_by_invoice_count.include?(@sa.merchants.find_by_id(12335000))
+    assert_equal 4, @sa.bottom_merchants_by_invoice_count.count
+  end
+
+  def test_it_can_return_the_top_days
+    assert_equal ["Wednesday"], @sa.top_days_by_invoice_count
+  end
+
+  def test_it_can_return_the_percentage_of_status
+    assert_equal 29.55, @sa.invoice_status(:pending)
+    assert_equal 56.95, @sa.invoice_status(:shipped)
+    assert_equal 13.5, @sa.invoice_status(:returned)
+  end
 end

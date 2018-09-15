@@ -8,7 +8,6 @@ class InvoiceRepository
   attr_reader :collection
 
   def initialize
-    @collection_type = "invoice"
     @collection = []
   end
 
