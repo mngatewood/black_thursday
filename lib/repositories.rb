@@ -62,6 +62,7 @@ module Repositories
   end
 
   def find_by_id(id)
+    binding.pry
     @collection.find{|element|element.id == id}
   end
 

@@ -142,7 +142,7 @@ class SalesAnalyst
   def merchant_ids_with_low_invoice_count
     invoices_per_merchant.keys.inject([]) do |bottom_merchant_ids, merchant_id|
       invoices = invoices_per_merchant[merchant_id]
-      if invoices > average_invoices_per_merchant + average_invoices_per_merchant_standard_deviation
+      if invoices < average_invoices_per_merchant + average_invoices_per_merchant_standard_deviation
         bottom_merchant_ids << merchant_id
       end
       bottom_merchant_ids
@@ -154,5 +154,29 @@ class SalesAnalyst
       bottom_merchants << merchants.find_by_id(merchant_id.to_i)
     end
     bottom_merchants_array = [all_bottom_merchants[0], all_bottom_merchants[1], all_bottom_merchants[2]]
+  end
+
+  def top_days_by_invoice_count
+    average = @invoices.all.count/7
+    grouped_by_weekday = @invoices.all.group_by do |invoice|
+      invoice.created_at.wday
+    end
+    invoices_by_day = grouped_by_weekday.values.map do |invoice_collection|
+      invoice_collection.count
+    end
+    a = day_nums = grouped_by_weekday.find_all do |weekday, invoices|
+      invoices.count >= average + standard_deviation(invoices_by_day)
+    end.to_h.keys
+    day_nums.map do |daynumber|
+      Date::DAYNAMES[daynumber]
+    end
+  end
+
+  def invoice_status(status_sym)
+    status = status_sym
+    grouped_by_status = @invoices.all.group_by do |invoice|
+      invoice.status
+    end
+    (((grouped_by_status[status].count.to_f)/(@invoices.all.count)) * 100).round(2)
   end
 end
