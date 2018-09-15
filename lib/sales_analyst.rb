@@ -110,4 +110,10 @@ class SalesAnalyst
     last_transaction.result == :success
   end
 
+  def invoice_total(invoice_id)
+    invoice_items_array = invoice_items.find_all_by_invoice_id(invoice_id)
+    invoice_amounts = invoice_items_array.map{|ii|ii.unit_price_to_dollars}
+    return invoice_amounts.inject(0){|sum,ii|sum + ii}.round(2)
+  end
+
 end

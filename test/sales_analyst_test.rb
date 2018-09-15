@@ -108,8 +108,15 @@ class SalesAnalystTest < Minitest::Test
 
   def test_it_returns_true_if_invoice_is_paid
     assert @sa.invoice_paid_in_full?(1)
+    assert @sa.invoice_paid_in_full?(200)
     refute @sa.invoice_paid_in_full?(290)
     refute @sa.invoice_paid_in_full?(1752)
+  end
+
+  def test_it_returns_invoice_total_in_dollars
+    assert_equal 3489.56, @sa.invoice_total(1)
+    assert_equal 938.8, @sa.invoice_total(2)
+    assert_equal 0, @sa.invoice_total(0)
   end
 
 end
