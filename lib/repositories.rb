@@ -87,13 +87,13 @@ module Repositories
   end
 
   def create_object_of_type(attributes)
-   case self.class.to_s
-   when "ItemRepository"         then Item.new(attributes)
-   when "MerchantRepository"     then Merchant.new(attributes)
-   when "InvoiceItemRepository"  then InvoiceItem.new(attributes)
-   when "TransactionRepository"  then Transaction.new(attributes)
-   when "InvoiceRepository"      then Invoice.new(attributes)
-   when "CustomerRepository"     then Customer.new(attributes)
+     case self.class.to_s
+     when "ItemRepository"         then Item.new(attributes)
+     when "MerchantRepository"     then Merchant.new(attributes)
+     when "InvoiceItemRepository"  then InvoiceItem.new(attributes)
+     when "TransactionRepository"  then Transaction.new(attributes)
+     when "InvoiceRepository"      then Invoice.new(attributes)
+     when "CustomerRepository"     then Customer.new(attributes)
 # add new line for repository here
    end
   end
