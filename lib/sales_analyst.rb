@@ -5,13 +5,17 @@ class SalesAnalyst
   attr_reader :items,
               :merchants,
               :invoice_items,
-              :invoices
+              :invoices,
+              :transactions,
+              :customers
 
-  def initialize(items, merchants, invoice_items, invoices)
+  def initialize(items, merchants, invoice_items, invoices, transactions, customers)
     @items          = items
     @merchants      = merchants
     @invoice_items  = invoice_items
     @invoices       = invoices
+    @transactions   = transactions
+    @customers      = customers
   end
 
   def inspect
@@ -100,12 +104,25 @@ class SalesAnalyst
     return items.all.find_all{|item|item.unit_price > threshold}
   end
 
+  def invoice_paid_in_full?(invoice_id)
+    invoice_transactions = transactions.find_all_by_invoice_id(invoice_id)
+    last_transaction = invoice_transactions.sort_by{|t|t.updated_at}.last
+    !last_transaction ? false : last_transaction.result == :success
+  end
+
+  def invoice_total(invoice_id)
+    invoice_items_array = invoice_items.find_all_by_invoice_id(invoice_id)
+    invoice_amounts = invoice_items_array.map{|ii|ii.unit_price_to_dollars * ii.quantity.to_i}
+    invoice_total = invoice_amounts.inject(0){|sum,ii|sum + ii}.round(2)
+    return BigDecimal.new(invoice_total, invoice_total.to_s.length - 1)
+  end
+
   def average_invoices_per_merchant
     return (invoices.all.length.to_f / merchants.all.length).round(2)
   end
 
   def invoices_per_merchant
-    merchant_ids = invoices.all.map{|invoice|invoice.merchant_id}
+    merchant_ids = invoices.all.map{|invoice|invoice.merchant_id} 
     merchant_ids.inject(Hash.new(0)) do |invoice_counts, merchant_id|
       invoice_counts[merchant_id] += 1
       invoice_counts
