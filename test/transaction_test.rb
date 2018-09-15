@@ -3,7 +3,7 @@ require 'minitest/pride'
 require 'time'
 require_relative '../lib/transaction'
 
-class ItemTest < Minitest::Test
+class TransactionTest < Minitest::Test
 
   def setup
     @transaction = Transaction.new({
