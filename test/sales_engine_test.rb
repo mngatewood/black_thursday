@@ -53,7 +53,6 @@ class SalesEngineTest < Minitest::Test
     assert_equal price_string_2, @se.convert_integer_to_big_decimal(999)
   end
 
-  #
 
   def test_creates_instance_of_merchant_repository
     assert_instance_of MerchantRepository, @se.merchants
@@ -65,8 +64,6 @@ class SalesEngineTest < Minitest::Test
     assert_instance_of MerchantRepository, mr
     assert_equal 475, mr.collection.length
   end
-
-  #
 
   def test_creates_instance_of_item_repository
     assert_instance_of ItemRepository, @se.items
@@ -116,7 +113,4 @@ class SalesEngineTest < Minitest::Test
     assert_equal 4985, ir.collection.length
   end
   # Copy and paste two tests above for XoX
-
-
-
 end

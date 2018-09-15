@@ -21,7 +21,7 @@ class SalesAnalystTest < Minitest::Test
     })
     @sa = @se.analyst
   end
-  # #
+
   def test_it_exists
     assert_instance_of SalesAnalyst, @sa
   end
@@ -104,21 +104,23 @@ class SalesAnalystTest < Minitest::Test
   def test_it_can_return_average_invoices_per_merchant_standard_deviation
     assert_equal 3.29, @sa.average_invoices_per_merchant_standard_deviation
   end
-  #
+
   def test_it_returns_top_merchants_by_invoices
-    assert_equal @sa.merchants.find_by_id(12335938), @sa.top_merchants_by_invoice_count[0]
-    assert_equal @sa.merchants.find_by_id(12334753), @sa.top_merchants_by_invoice_count[1]
-    assert_equal @sa.merchants.find_by_id(12334389), @sa.top_merchants_by_invoice_count[2]
+    assert @sa.top_merchants_by_invoice_count.include?(@sa.merchants.find_by_id(12336430))
+    assert @sa.top_merchants_by_invoice_count.include?(@sa.merchants.find_by_id(12334146))
+    assert @sa.top_merchants_by_invoice_count.include?(@sa.merchants.find_by_id(12335213))
+    assert_equal 12, @sa.top_merchants_by_invoice_count.count
   end
 
   def test_it_returns_bottom_merchants_by_invoices
-    assert_equal @sa.merchants.find_by_id(12335938), @sa.bottom_merchants_by_invoice_count[0]
-    assert_equal @sa.merchants.find_by_id(12334753), @sa.bottom_merchants_by_invoice_count[1]
-    assert_equal @sa.merchants.find_by_id(12334389), @sa.bottom_merchants_by_invoice_count[2]
+    assert @sa.bottom_merchants_by_invoice_count.include?(@sa.merchants.find_by_id(12334235))
+    assert @sa.bottom_merchants_by_invoice_count.include?(@sa.merchants.find_by_id(12334601))
+    assert @sa.bottom_merchants_by_invoice_count.include?(@sa.merchants.find_by_id(12335000))
+    assert_equal 4, @sa.bottom_merchants_by_invoice_count.count
   end
 
   def test_it_can_return_the_top_days
-    assert_equal ["Saturday", "Wednesday", "Thursday"], @sa.top_days_by_invoice_count
+    assert_equal ["Wednesday"], @sa.top_days_by_invoice_count
   end
 
   def test_it_can_return_the_percentage_of_status
