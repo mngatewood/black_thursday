@@ -205,4 +205,22 @@ class SalesAnalyst
     end
     (((grouped_by_status[status].count.to_f)/(@invoices.all.count)) * 100).round(2)
   end
+
+  def total_revenue_by_date(date)
+    all_invoices_on_date = @invoice_items.collection.find_all do |invoice_item|
+      date.to_s[0..9] == invoice_item.updated_at.to_s[0..9]
+    end
+    revenue_for_day = all_invoices_on_date.map do |invoice_item|
+      invoice_item.unit_price * invoice_item.quantity.to_i
+    end
+    revenue_for_day.inject(0) do |sum, revenue|
+      revenue + sum
+    end
+  end
+
+  def top_revenue_earners(x=20)
+    @invoice_items
+
+  end
+
 end
