@@ -114,9 +114,9 @@ class SalesAnalystTest < Minitest::Test
   end
 
   def test_it_returns_invoice_total_in_dollars
-    assert_equal 3489.56, @sa.invoice_total(1)
-    assert_equal 938.8, @sa.invoice_total(2)
-    assert_equal 0, @sa.invoice_total(0)
+    assert_equal BigDecimal.new(21067.77, 7), @sa.invoice_total(1)
+    assert_equal BigDecimal.new(5289.13, 6), @sa.invoice_total(2)
+    assert_equal BigDecimal.new(0), @sa.invoice_total(0)
   end
 
   def test_it_returns_the_average_invoices_per_merchant
