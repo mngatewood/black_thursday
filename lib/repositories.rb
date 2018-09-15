@@ -62,7 +62,6 @@ module Repositories
   end
 
   def find_by_id(id)
-    binding.pry
     @collection.find{|element|element.id == id}
   end
 
@@ -88,14 +87,15 @@ module Repositories
   end
 
   def create_object_of_type(attributes)
-    case @collection_type
-    when "item" then Item.new(attributes)
-    when "merchant" then Merchant.new(attributes)
-    when "invoice item" then InvoiceItem.new(attributes)
-    when "transaction" then Transaction.new(attributes)
-    when "invoice" then Invoice.new(attributes)
+   case self.class.to_s
+   when "ItemRepository"         then Item.new(attributes)
+   when "MerchantRepository"     then Merchant.new(attributes)
+   when "InvoiceItemRepository"  then InvoiceItem.new(attributes)
+   when "TransactionRepository"  then Transaction.new(attributes)
+   when "InvoiceRepository"      then Invoice.new(attributes)
+   when "CustomerRepository"     then Customer.new(attributes)
 # add new line for repository here
-    end
+   end
   end
 
   def update(id, attributes)
@@ -108,14 +108,14 @@ module Repositories
   end
 
   def get_valid_keys
-    case @collection_type
-    when "item" then [:name, :description, :unit_price]
-    when "merchant" then [:name]
-    when "invoice item" then [:quantity, :unit_price]
-    when "invoice" then [:status]
-# add new line for repository here
-    when "transaction" then [:credit_card_number, :credit_card_expiration_date, :result]
+    case self.class.to_s
+    when "ItemRepository"         then [:name, :description, :unit_price]
+    when "MerchantRepository"     then [:name]
+    when "InvoiceItemRepository"  then [:quantity, :unit_price]
+    when "InvoiceRepository"      then [:status]
+    when "TransactionRepository"  then [:credit_card_number, :credit_card_expiration_date, :result]
+    when "CustomerRepository"     then [:first_name, :last_name]
+      # add new line for repository here
     end
   end
-
 end

@@ -125,7 +125,7 @@ class SalesAnalyst
   def merchant_ids_with_high_invoice_count
     invoices_per_merchant.keys.inject([]) do |top_merchant_ids, merchant_id|
       invoices = invoices_per_merchant[merchant_id]
-      if invoices > average_invoices_per_merchant + average_invoices_per_merchant_standard_deviation
+      if invoices > average_invoices_per_merchant + (average_invoices_per_merchant_standard_deviation * 2)
         top_merchant_ids << merchant_id
       end
       top_merchant_ids
@@ -136,13 +136,13 @@ class SalesAnalyst
     all_top_merchants = merchant_ids_with_high_invoice_count.inject([]) do |top_merchants, merchant_id|
       top_merchants << merchants.find_by_id(merchant_id.to_i)
     end
-    top_merchants_array = [all_top_merchants[0], all_top_merchants[1], all_top_merchants[2]]
+    all_top_merchants
   end
 
   def merchant_ids_with_low_invoice_count
     invoices_per_merchant.keys.inject([]) do |bottom_merchant_ids, merchant_id|
       invoices = invoices_per_merchant[merchant_id]
-      if invoices < average_invoices_per_merchant + average_invoices_per_merchant_standard_deviation
+      if invoices < average_invoices_per_merchant - (average_invoices_per_merchant_standard_deviation * 2)
         bottom_merchant_ids << merchant_id
       end
       bottom_merchant_ids
@@ -153,7 +153,7 @@ class SalesAnalyst
     all_bottom_merchants = merchant_ids_with_high_invoice_count.inject([]) do |bottom_merchants, merchant_id|
       bottom_merchants << merchants.find_by_id(merchant_id.to_i)
     end
-    bottom_merchants_array = [all_bottom_merchants[0], all_bottom_merchants[1], all_bottom_merchants[2]]
+    all_bottom_merchants
   end
 
   def top_days_by_invoice_count
