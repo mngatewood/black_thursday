@@ -151,14 +151,19 @@ class SalesAnalystTest < Minitest::Test
   #   assert_equal 13.5, @sa.invoice_status(:returned)
   # end
 
-  def test_it_returns_total_revenue_for_a_given_date
-    date = Time.parse("2012-03-27")
-    assert_equal BigDecimal.new(60016937.25, 10), @sa.total_revenue_by_date(date)
-  end
+  # def test_it_returns_total_revenue_for_a_given_date
+  #   date = Time.parse("2012-03-27")
+  #   assert_equal BigDecimal.new(60016937.25, 10), @sa.total_revenue_by_date(date)
+  # end
 
   def test_it_returns_an_array_of_top_performing_merchants_by_revenue
-    assert_equal [], @sa.top_revenue_earners(3)
-    assert_equal [], @sa.top_revenue_earners
+    assert_equal 3, @sa.top_revenue_earners(3).length
+    assert_equal 20, @sa.top_revenue_earners.length
+  end
+
+  def test_it_returns_total_revenue_for_a_given_merchant
+    expected = BigDecimal.new(274391.32, 8)
+    assert_equal expected, @sa.total_revenue_by_merchant(12335938)
   end
 
 end

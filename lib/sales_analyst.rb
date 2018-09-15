@@ -218,9 +218,29 @@ class SalesAnalyst
     end
   end
 
-  def top_revenue_earners(x=20)
-    @invoice_items
+  def total_revenue_by_merchant(merchant_id)
+    invoices_for_merchant = @invoices.find_all_by_merchant_id(merchant_id)
+    invoices_for_merchant.inject(0) do |sum, invoice|
+      sum + invoice_total(invoice.id)
+    end
+  end
 
+  def top_revenue_earners(x=20)
+    all_merchants = @merchants.collection.inject({}) do |merchant_revenue_total, merchant|
+      merchant_revenue_total[merchant.id] = total_revenue_by_merchant(merchant.id)
+      merchant_revenue_total
+    end
+    sorted_merchant_ids = all_merchants.sort_by do |merchant, revenue|
+      revenue
+    end.reverse
+    top_merchants_array = sorted_merchant_ids.first(x)
+    top_merchant_ids = top_merchants_array.map do |merchant_array|
+      merchant_array[0]
+    end
+    top_merchants = top_merchant_ids.map do |id|
+      @merchants.find_by_id(id)
+    end
+    return top_merchants
   end
 
 end
