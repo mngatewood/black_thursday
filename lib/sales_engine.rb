@@ -101,7 +101,8 @@ class SalesEngine
   def build_merchant_object(data)
     Merchant.new({
       :id   => data[:id],
-      :name => data[:name]
+      :name => data[:name],
+      :created_at => Time.parse(data[:created_at])
       })
   end
 
@@ -139,7 +140,7 @@ class SalesEngine
       :updated_at  => Time.parse(data[:updated_at])
       })
   end
-  
+
   def build_customer_object(data)
     Customer.new({
       :id         => data[:id],
@@ -149,7 +150,7 @@ class SalesEngine
       :updated_at => Time.parse(data[:updated_at])
       })
   end
-  
+
   # def build_XoX_object(data)
   #   XoX.new({
   #     :id         => data[:id],

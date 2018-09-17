@@ -159,14 +159,14 @@ class SalesAnalystTest < Minitest::Test
   # def test_it_returns_an_array_of_top_performing_merchants_by_revenue
   #   assert_equal 3, @sa.top_revenue_earners(3).length
   #   assert_equal 20, @sa.top_revenue_earners.length
-  #   assert_equal 10, @sa.top_revenue_earners(10).length    
+  #   assert_equal 10, @sa.top_revenue_earners(10).length
   # end
 
   # def test_it_returns_total_revenue_for_a_given_merchant
   #   expected = BigDecimal.new(274391.32, 8)
   #   assert_equal expected, @sa.total_revenue_by_merchant(12335938)
   # end
-  
+
   # def test_it_returns_all_merchants_with_pending_invoices
   #   assert_equal 467, @sa.merchants_with_pending_invoices.count
   #   assert_instance_of Merchant, @sa.merchants_with_pending_invoices.first
@@ -177,8 +177,22 @@ class SalesAnalystTest < Minitest::Test
   #   refute @sa.pending_invoice?(1)
   # end
 
-  def test_it_returns_merchants_that_sell_only_one_item
-    assert_equal [], @sa.merchants_with_only_one_item
-  end
+  # def test_it_returns_merchants_that_sell_only_one_item
+  #   assert_equal [], @sa.merchants_with_only_one_item
+  # end
 
+  # def test_it_can_return_merchants_with_one_item_per_month
+  #   assert_equal [], @sa.merchants_with_only_one_item_registered_in_month("June")
+  # end
+
+  # def test_it_can_return_revenue_for_a_given_merchant
+  #   assert_equal BigDecimal.new(57060.5, 6), @sa.revenue_by_merchant(12334194)
+  # end
+
+  def test_it_can_return_the_most_sold_item_for_a_given_merchant
+    item_ids = @sa.most_sold_item_for_merchant(12334189).map do |item|
+      item.id
+    end
+    assert item_ids.include?(263524984)
+  end
 end

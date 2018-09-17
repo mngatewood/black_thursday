@@ -122,7 +122,7 @@ class SalesAnalyst
   end
 
   def invoices_per_merchant
-    merchant_ids = invoices.all.map{|invoice|invoice.merchant_id} 
+    merchant_ids = invoices.all.map{|invoice|invoice.merchant_id}
     merchant_ids.inject(Hash.new(0)) do |invoice_counts, merchant_id|
       invoice_counts[merchant_id] += 1
       invoice_counts
@@ -215,7 +215,7 @@ class SalesAnalyst
     end
   end
 
-  def total_revenue_by_merchant(merchant_id)
+  def revenue_by_merchant(merchant_id)
     invoices_for_merchant = @invoices.find_all_by_merchant_id(merchant_id)
     invoices_for_merchant.inject(0) do |sum, invoice|
       invoice_paid_in_full?(invoice.id) && !pending_invoice?(invoice.id) && invoice.status != :returned ?
@@ -223,7 +223,7 @@ class SalesAnalyst
         sum
     end
   end
-  
+
   def top_revenue_earners(x=20)
     sorted_merchants = sort_hash_by_value(all_merchants_total_revenue).reverse
     top_merchants_array = sorted_merchants.first(x)
@@ -235,10 +235,10 @@ class SalesAnalyst
     end
     return top_merchants
   end
-  
+
   def all_merchants_total_revenue
     @merchants.collection.inject({}) do |merchant_revenue_total, merchant|
-      merchant_revenue_total[merchant.id] = total_revenue_by_merchant(merchant.id)
+      merchant_revenue_total[merchant.id] = revenue_by_merchant(merchant.id)
       merchant_revenue_total
     end
   end
@@ -266,9 +266,9 @@ class SalesAnalyst
   def merchants_with_pending_invoices
     merchants_ids_with_pending_invoices.uniq.map do |merchant_id|
       merchants.find_by_id(merchant_id)
-    end             
+    end
   end
-  
+
   def pending_invoice?(invoice_id)
     all_transactions_for_invoice(invoice_id).each do |t|
       if t.result == :success
@@ -279,15 +279,13 @@ class SalesAnalyst
   end
 
   def all_transactions_for_invoice(invoice_id)
-    invoice_transactions = transactions.collection.find_all do |t|
+    transactions.collection.find_all do |t|
       t.invoice_id == invoice_id
     end
-    merchant_
   end
 
   def merchants_with_only_one_item
-    items_by_merchant_id = items_per_merchant
-    merchant_ids_with_one_item = items_by_merchant_id.select do |merchant, item_count|
+    merchant_ids_with_one_item = items_per_merchant.select do |merchant, item_count|
       item_count == 1
     end
     merchants_with_one_item = merchant_ids_with_one_item.keys.map do |merchant_id|
@@ -295,4 +293,52 @@ class SalesAnalyst
     end
   end
 
+  def merchants_with_only_one_item_registered_in_month(month_name)
+    invoice_found_in_given_month = invoices.collection.find_all do |invoice|
+      invoice.created_at.strftime("%B") == month_name
+    end
+    invoices_with_merchants_created_in_the_same_month = invoice_found_in_given_month.find_all do |invoice|
+      merchant = merchants.find_by_id(invoice.merchant_id)
+      merchant.created_at.strftime("%B") == month_name
+    end
+    grouped_by_merchant_ids = invoices_with_merchants_created_in_the_same_month.group_by do |invoice|
+      invoice.merchant_id
+    end
+    invoice_count = grouped_by_merchant_ids.keys.inject({}) do |hash, merchant_id|
+      hash[merchant_id] = grouped_by_merchant_ids[merchant_id].length
+      hash
+    end
+    merchant_id_count_pairs = invoice_count.find_all do |merchant_id, count|
+      count == 1
+    end
+    merchants_with_one_invoice_in_month = merchant_id_count_pairs.map do |id_count_pair|
+      merchants.find_by_id(id_count_pair[0])
+    end
+  end
+
+  def most_sold_item_for_merchant(merchant_id)
+    invoices_filtered_by_merchant_id = invoices.collection.find_all do |invoice|
+      invoice.merchant_id == merchant_id
+    end
+
+    max_items_hash = invoices_filtered_by_merchant_id.inject({}) do |hash, invoice|
+      invoice_item_for_invoice = invoice_items.find_all_by_invoice_id(invoice.id)
+      quantity_array = invoice_item_for_invoice.map do |invoice_item|
+        invoice_item.quantity.to_i
+      end
+      max_invoice_item = invoice_item_for_invoice.find_all do |invoice_item|
+        invoice_item.quantity.to_i == quantity_array.max
+      end
+      max_items_array = max_invoice_item.map do |invoice_item|
+        items.find_by_id(invoice_item.item_id)
+      end
+      hash[max_items_array] = quantity_array.max
+      hash
+    end
+
+    max_items_for_merchant = max_items_hash.find_all do |items, quantity|
+      quantity == max_items_hash.values.max
+    end
+    binding.pry
+  end
 end
