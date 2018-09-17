@@ -218,12 +218,14 @@ class SalesAnalyst
   def total_revenue_by_merchant(merchant_id)
     invoices_for_merchant = @invoices.find_all_by_merchant_id(merchant_id)
     invoices_for_merchant.inject(0) do |sum, invoice|
-      sum + invoice_total(invoice.id)
+      invoice_paid_in_full?(invoice.id) && !pending_invoice?(invoice.id) && invoice.status != :returned ?
+        sum + invoice_total(invoice.id) :
+        sum
     end
   end
-
+  
   def top_revenue_earners(x=20)
-    sorted_merchants = sort_hash_by_value(all_merchants_total_revenue)
+    sorted_merchants = sort_hash_by_value(all_merchants_total_revenue).reverse
     top_merchants_array = sorted_merchants.first(x)
     top_merchant_ids = top_merchants_array.map do |merchant_array|
       merchant_array[0]
@@ -233,11 +235,18 @@ class SalesAnalyst
     end
     return top_merchants
   end
-
+  
   def all_merchants_total_revenue
     @merchants.collection.inject({}) do |merchant_revenue_total, merchant|
       merchant_revenue_total[merchant.id] = total_revenue_by_merchant(merchant.id)
       merchant_revenue_total
+    end
+  end
+
+  def merchants_ranked_by_revenue
+    sorted_merchant_revenue = sort_hash_by_value(all_merchants_total_revenue).reverse
+    sorted_merchant_array = sorted_merchant_revenue.map do |merchant|
+      merchants.find_by_id(merchant.first)
     end
   end
 
@@ -272,6 +281,17 @@ class SalesAnalyst
   def all_transactions_for_invoice(invoice_id)
     invoice_transactions = transactions.collection.find_all do |t|
       t.invoice_id == invoice_id
+    end
+    merchant_
+  end
+
+  def merchants_with_only_one_item
+    items_by_merchant_id = items_per_merchant
+    merchant_ids_with_one_item = items_by_merchant_id.select do |merchant, item_count|
+      item_count == 1
+    end
+    merchants_with_one_item = merchant_ids_with_one_item.keys.map do |merchant_id|
+      merchants.find_by_id(merchant_id.to_i)
     end
   end
 

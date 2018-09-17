@@ -115,8 +115,8 @@ class SalesAnalystTest < Minitest::Test
 
   # def test_it_returns_invoice_total_in_dollars
   #   assert_equal BigDecimal.new(21067.77, 7), @sa.invoice_total(1)
-  #   assert_equal BigDecimal.new(5289.13, 6), @sa.invoice_total(2)
-  #   assert_equal BigDecimal.new(0), @sa.invoice_total(0)
+  # assert_equal BigDecimal.new(5289.13, 6), @sa.invoice_total(2)
+  # assert_equal BigDecimal.new(0), @sa.invoice_total(0)
   # end
 
   # def test_it_returns_the_average_invoices_per_merchant
@@ -151,14 +151,15 @@ class SalesAnalystTest < Minitest::Test
   #   assert_equal 13.5, @sa.invoice_status(:returned)
   # end
 
-  def test_it_returns_total_revenue_for_a_given_date
-    date = Time.parse("2006-10-16")
-    assert_equal BigDecimal.new(17022.32, 7), @sa.total_revenue_by_date(date)
-  end
+  # def test_it_returns_total_revenue_for_a_given_date
+  #   date = Time.parse("2006-10-16")
+  #   assert_equal BigDecimal.new(17022.32, 7), @sa.total_revenue_by_date(date)
+  # end
 
   # def test_it_returns_an_array_of_top_performing_merchants_by_revenue
   #   assert_equal 3, @sa.top_revenue_earners(3).length
   #   assert_equal 20, @sa.top_revenue_earners.length
+  #   assert_equal 10, @sa.top_revenue_earners(10).length    
   # end
 
   # def test_it_returns_total_revenue_for_a_given_merchant
@@ -175,5 +176,9 @@ class SalesAnalystTest < Minitest::Test
   #   assert @sa.pending_invoice?(9)
   #   refute @sa.pending_invoice?(1)
   # end
+
+  def test_it_returns_merchants_that_sell_only_one_item
+    assert_equal [], @sa.merchants_with_only_one_item
+  end
 
 end
