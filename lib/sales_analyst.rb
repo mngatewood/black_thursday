@@ -207,14 +207,11 @@ class SalesAnalyst
   end
 
   def total_revenue_by_date(date)
-    all_invoices_on_date = @invoice_items.collection.find_all do |invoice_item|
-      date.to_s[0..9] == invoice_item.updated_at.to_s[0..9]
+    all_invoices_on_date = invoices.collection.find_all do |invoice|
+      date.to_s[0..9] == invoice.created_at.to_s[0..9]
     end
-    revenue_for_day = all_invoices_on_date.map do |invoice_item|
-      invoice_item.unit_price * invoice_item.quantity.to_i
-    end
-    revenue_for_day.inject(0) do |sum, revenue|
-      revenue + sum
+    return all_invoices_on_date.inject(0) do |sum, invoice|
+      sum + invoice_total(invoice.id)
     end
   end
 
@@ -226,14 +223,8 @@ class SalesAnalyst
   end
 
   def top_revenue_earners(x=20)
-    all_merchants = @merchants.collection.inject({}) do |merchant_revenue_total, merchant|
-      merchant_revenue_total[merchant.id] = total_revenue_by_merchant(merchant.id)
-      merchant_revenue_total
-    end
-    sorted_merchant_ids = all_merchants.sort_by do |merchant, revenue|
-      revenue
-    end.reverse
-    top_merchants_array = sorted_merchant_ids.first(x)
+    sorted_merchants = sort_hash_by_value(all_merchants_total_revenue)
+    top_merchants_array = sorted_merchants.first(x)
     top_merchant_ids = top_merchants_array.map do |merchant_array|
       merchant_array[0]
     end
@@ -241,6 +232,47 @@ class SalesAnalyst
       @merchants.find_by_id(id)
     end
     return top_merchants
+  end
+
+  def all_merchants_total_revenue
+    @merchants.collection.inject({}) do |merchant_revenue_total, merchant|
+      merchant_revenue_total[merchant.id] = total_revenue_by_merchant(merchant.id)
+      merchant_revenue_total
+    end
+  end
+
+  def sort_hash_by_value(hash)
+    hash.sort_by{|key, value|value}
+  end
+
+  def merchants_ids_with_pending_invoices
+    invoices.collection.inject([]) do |merchant_id_array, invoice|
+      if pending_invoice?(invoice.id)
+        merchant_id_array << invoice.merchant_id
+      end
+      merchant_id_array
+    end
+  end
+
+  def merchants_with_pending_invoices
+    merchants_ids_with_pending_invoices.uniq.map do |merchant_id|
+      merchants.find_by_id(merchant_id)
+    end             
+  end
+  
+  def pending_invoice?(invoice_id)
+    all_transactions_for_invoice(invoice_id).each do |t|
+      if t.result == :success
+        return false
+      end
+    end
+    return true
+  end
+
+  def all_transactions_for_invoice(invoice_id)
+    invoice_transactions = transactions.collection.find_all do |t|
+      t.invoice_id == invoice_id
+    end
   end
 
 end
