@@ -18,10 +18,6 @@ class SalesAnalyst
     @customers      = customers
   end
 
-  def inspect
-    "#<#{self.class} #{@collection.size} rows>"
-  end
-
   def average_items_per_merchant
     return (items.all.length.to_f / merchants.all.length).round(2)
   end

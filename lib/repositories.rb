@@ -94,7 +94,6 @@ module Repositories
      when "TransactionRepository"  then Transaction.new(attributes)
      when "InvoiceRepository"      then Invoice.new(attributes)
      when "CustomerRepository"     then Customer.new(attributes)
-# add new line for repository here
    end
   end
 
@@ -115,7 +114,6 @@ module Repositories
     when "InvoiceRepository"      then [:status]
     when "TransactionRepository"  then [:credit_card_number, :credit_card_expiration_date, :result]
     when "CustomerRepository"     then [:first_name, :last_name]
-      # add new line for repository here
     end
   end
 end

@@ -1,12 +1,11 @@
-require 'minitest/autorun'
-require 'minitest/pride'
+require_relative './helper_test'
 require_relative '../lib/sales_analyst'
 require_relative '../lib/sales_engine'
-require_relative '../lib/item_repository'
-require_relative '../lib/merchant_repository'
-require_relative '../lib/transaction_repository'
-require_relative '../lib/invoice_repository'
-require_relative '../lib/customer_repository'
+# require_relative '../lib/item_repository'
+# require_relative '../lib/merchant_repository'
+# require_relative '../lib/transaction_repository'
+# require_relative '../lib/invoice_repository'
+# require_relative '../lib/customer_repository'
 # require_relative '../lib/new_repository'
 
 class SalesAnalystTest < Minitest::Test
@@ -19,11 +18,10 @@ class SalesAnalystTest < Minitest::Test
       :invoices       => "./data/invoices.csv",
       :transactions   => "./data/transactions.csv",
       :customers      => "./data/customers.csv"
-    # :objects        => "./data/objects.csv"
     })
     @sa = @se.analyst
   end
-
+  
   def test_it_exists
     assert_instance_of SalesAnalyst, @sa
   end
@@ -199,5 +197,10 @@ class SalesAnalystTest < Minitest::Test
   def test_it_can_return_the_best_item_for_a_given_merchant
     item_ids = @sa.best_item_for_merchant(12334189)
     assert_equal 263516130, item_ids.id
+  end
+
+  def test_it_can_rank_the_merchants_by_revenue
+    assert_equal 12334634, @sa.merchants_ranked_by_revenue.first.id
+    assert_equal 12336175, @sa.merchants_ranked_by_revenue.last.id
   end
 end

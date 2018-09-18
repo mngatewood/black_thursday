@@ -12,7 +12,7 @@ class InvoiceRepository
   end
 
   def find_all_by_status(status)
-    all.find_all do |item|
+    collection.find_all do |item|
       item.status == status
     end
   end

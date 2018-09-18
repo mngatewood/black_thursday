@@ -1,5 +1,4 @@
-require 'minitest/autorun'
-require 'minitest/pride'
+require_relative './helper_test'
 require 'time'
 require 'bigdecimal'
 require_relative '../lib/invoice_item'

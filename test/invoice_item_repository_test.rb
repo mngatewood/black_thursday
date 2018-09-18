@@ -1,5 +1,4 @@
-require 'minitest/autorun'
-require 'minitest/pride'
+require_relative './helper_test'
 require 'bigdecimal'
 require 'time'
 require_relative '../lib/invoice_item_repository'
@@ -11,7 +10,7 @@ class InvoiceItemRepositoryTest < Minitest::Test
     @iir = InvoiceItemRepository.new
     @invoice_item_1 = InvoiceItem.new({
       :id => 6,
-      :item_id => 7,
+      :item_id => 1,
       :invoice_id => 8,
       :quantity => 1,
       :unit_price => BigDecimal.new(10.99, 4),
@@ -149,4 +148,9 @@ class InvoiceItemRepositoryTest < Minitest::Test
     assert_nil @iir.find_by_id(6)
   end
 
+  def test_it_can_find_a_item_by_its_id
+    self.add_test_invoice_items
+    expected = [@invoice_item_1, @invoice_item_2]
+    assert_equal expected, @iir.find_all_by_item_id(1)
+  end
 end
