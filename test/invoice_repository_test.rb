@@ -1,5 +1,4 @@
-require 'minitest/autorun'
-require 'minitest/pride'
+require_relative './helper_test'
 require 'bigdecimal'
 require 'time'
 require_relative '../lib/invoice_repository'
@@ -146,5 +145,16 @@ class InvoiceRepositoryTest < Minitest::Test
     self.add_test_invoices
     @ir.delete(1)
     assert_nil @ir.find_by_id(1)
+  end
+
+  def test_it_can_find_all_invoices_by_status
+    self.add_test_invoices
+    expected = [@invoice_1, @invoice_3, @invoice_4, @invoice_5]
+    assert_equal expected, @ir.find_all_by_status("pending")
+  end
+
+  def test_inspect
+    self.add_test_invoices
+    assert_equal "#<InvoiceRepository 5 rows>", @ir.inspect
   end
 end

@@ -1,12 +1,11 @@
-require 'minitest/autorun'
-require 'minitest/pride'
+require_relative './helper_test'
 require_relative '../lib/sales_analyst'
 require_relative '../lib/sales_engine'
-require_relative '../lib/item_repository'
-require_relative '../lib/merchant_repository'
-require_relative '../lib/transaction_repository'
-require_relative '../lib/invoice_repository'
-require_relative '../lib/customer_repository'
+# require_relative '../lib/item_repository'
+# require_relative '../lib/merchant_repository'
+# require_relative '../lib/transaction_repository'
+# require_relative '../lib/invoice_repository'
+# require_relative '../lib/customer_repository'
 # require_relative '../lib/new_repository'
 
 class SalesAnalystTest < Minitest::Test
@@ -19,11 +18,10 @@ class SalesAnalystTest < Minitest::Test
       :invoices       => "./data/invoices.csv",
       :transactions   => "./data/transactions.csv",
       :customers      => "./data/customers.csv"
-    # :objects        => "./data/objects.csv"
     })
     @sa = @se.analyst
   end
-
+  
   def test_it_exists
     assert_instance_of SalesAnalyst, @sa
   end
@@ -115,8 +113,8 @@ class SalesAnalystTest < Minitest::Test
 
   def test_it_returns_invoice_total_in_dollars
     assert_equal BigDecimal.new(21067.77, 7), @sa.invoice_total(1)
-    assert_equal BigDecimal.new(5289.13, 6), @sa.invoice_total(2)
-    assert_equal BigDecimal.new(0), @sa.invoice_total(0)
+  assert_equal BigDecimal.new(5289.13, 6), @sa.invoice_total(2)
+  assert_equal BigDecimal.new(0), @sa.invoice_total(0)
   end
 
   def test_it_returns_the_average_invoices_per_merchant
@@ -149,5 +147,60 @@ class SalesAnalystTest < Minitest::Test
     assert_equal 29.55, @sa.invoice_status(:pending)
     assert_equal 56.95, @sa.invoice_status(:shipped)
     assert_equal 13.5, @sa.invoice_status(:returned)
+  end
+
+  def test_it_returns_total_revenue_for_a_given_date
+    date = Time.parse("2006-10-16")
+    assert_equal BigDecimal.new(17022.32, 7), @sa.total_revenue_by_date(date)
+  end
+
+  def test_it_returns_an_array_of_top_performing_merchants_by_revenue
+    assert_equal 3, @sa.top_revenue_earners(3).length
+    assert_equal 20, @sa.top_revenue_earners.length
+    assert_equal 10, @sa.top_revenue_earners(10).length
+  end
+
+  def test_it_returns_total_revenue_for_a_given_merchant
+    expected = BigDecimal.new(126300.9, 7)
+    assert_equal expected, @sa.revenue_by_merchant(12335938)
+  end
+
+  def test_it_returns_all_merchants_with_pending_invoices
+    assert_equal 467, @sa.merchants_with_pending_invoices.count
+    assert_instance_of Merchant, @sa.merchants_with_pending_invoices.first
+  end
+
+  def test_it_returns_true_if_invoice_is_pending
+    assert @sa.pending_invoice?(9)
+    refute @sa.pending_invoice?(1)
+  end
+
+  def test_it_returns_merchants_that_sell_only_one_item
+    assert_equal 243, @sa.merchants_with_only_one_item.length
+  end
+
+  def test_it_can_return_merchants_with_one_item_per_month
+    assert_equal 14, @sa.merchants_with_only_one_item_registered_in_month("March").length
+  end
+
+  def test_it_can_return_revenue_for_a_given_merchant
+    assert_equal BigDecimal.new(65416.79, 7), @sa.revenue_by_merchant(12334194)
+  end
+
+  def test_it_can_return_the_most_sold_item_for_a_given_merchant
+    item_ids = @sa.most_sold_item_for_merchant(12334189).map do |item|
+      item.id
+    end
+    assert item_ids.include?(263524984)
+  end
+
+  def test_it_can_return_the_best_item_for_a_given_merchant
+    item_ids = @sa.best_item_for_merchant(12334189)
+    assert_equal 263516130, item_ids.id
+  end
+
+  def test_it_can_rank_the_merchants_by_revenue
+    assert_equal 12334634, @sa.merchants_ranked_by_revenue.first.id
+    assert_equal 12336175, @sa.merchants_ranked_by_revenue.last.id
   end
 end

@@ -18,10 +18,6 @@ class SalesAnalyst
     @customers      = customers
   end
 
-  def inspect
-    "#<#{self.class} #{@collection.size} rows>"
-  end
-
   def average_items_per_merchant
     return (items.all.length.to_f / merchants.all.length).round(2)
   end
@@ -113,8 +109,8 @@ class SalesAnalyst
   def invoice_total(invoice_id)
     invoice_items_array = invoice_items.find_all_by_invoice_id(invoice_id)
     invoice_amounts = invoice_items_array.map{|ii|ii.unit_price_to_dollars * ii.quantity.to_i}
-    invoice_total = invoice_amounts.inject(0){|sum,ii|sum + ii}.round(2)
-    return BigDecimal.new(invoice_total, invoice_total.to_s.length - 1)
+    invoice_total = invoice_amounts.inject(BigDecimal.new(0, 1)){|sum,ii|sum + ii}.round(2)
+    return invoice_total
   end
 
   def average_invoices_per_merchant
@@ -122,7 +118,7 @@ class SalesAnalyst
   end
 
   def invoices_per_merchant
-    merchant_ids = invoices.all.map{|invoice|invoice.merchant_id} 
+    merchant_ids = invoices.all.map{|invoice|invoice.merchant_id}
     merchant_ids.inject(Hash.new(0)) do |invoice_counts, merchant_id|
       invoice_counts[merchant_id] += 1
       invoice_counts
@@ -204,5 +200,147 @@ class SalesAnalyst
       invoice.status
     end
     (((grouped_by_status[status].count.to_f)/(@invoices.all.count)) * 100).round(2)
+  end
+
+  def total_revenue_by_date(date)
+    all_invoices_on_date = invoices.collection.find_all do |invoice|
+      date.to_s[0..9] == invoice.created_at.to_s[0..9]
+    end
+    return all_invoices_on_date.inject(0) do |sum, invoice|
+      sum + invoice_total(invoice.id)
+    end
+  end
+
+  def revenue_by_merchant(merchant_id)
+    invoices_for_merchant = @invoices.find_all_by_merchant_id(merchant_id)
+    invoices_for_merchant.inject(0) do |sum, invoice|
+       invoice_paid_in_full?(invoice.id) ?
+        sum + invoice_total(invoice.id) :
+        sum
+    end
+  end
+
+  def top_revenue_earners(x=20)
+    sorted_merchants = sort_hash_by_value(all_merchants_total_revenue).reverse
+    top_merchants_array = sorted_merchants.first(x)
+    top_merchant_ids = top_merchants_array.map do |merchant_array|
+      merchant_array[0]
+    end
+    top_merchants = top_merchant_ids.map do |id|
+      @merchants.find_by_id(id)
+    end
+    return top_merchants
+  end
+
+  def all_merchants_total_revenue
+    @merchants.collection.inject({}) do |merchant_revenue_total, merchant|
+      merchant_revenue_total[merchant.id] = revenue_by_merchant(merchant.id)
+      merchant_revenue_total
+    end
+  end
+
+  def merchants_ranked_by_revenue
+    sorted_merchant_revenue = sort_hash_by_value(all_merchants_total_revenue).reverse
+    sorted_merchant_array = sorted_merchant_revenue.map do |merchant|
+      merchants.find_by_id(merchant.first)
+    end
+  end
+
+  def sort_hash_by_value(hash)
+    hash.sort_by{|key, value|value}
+  end
+
+  def merchants_ids_with_pending_invoices
+    invoices.collection.inject([]) do |merchant_id_array, invoice|
+      if pending_invoice?(invoice.id)
+        merchant_id_array << invoice.merchant_id
+      end
+      merchant_id_array
+    end
+  end
+
+  def merchants_with_pending_invoices
+    merchants_ids_with_pending_invoices.uniq.map do |merchant_id|
+      merchants.find_by_id(merchant_id)
+    end
+  end
+
+  def pending_invoice?(invoice_id)
+    all_transactions_for_invoice(invoice_id).each do |t|
+      if t.result == :success
+        return false
+      end
+    end
+    return true
+  end
+
+  def all_transactions_for_invoice(invoice_id)
+    transactions.collection.find_all do |t|
+      t.invoice_id == invoice_id
+    end
+  end
+
+  def merchants_with_only_one_item
+    merchant_ids_with_one_item = items_per_merchant.select do |merchant, item_count|
+      item_count == 1
+    end
+    merchants_with_one_item = merchant_ids_with_one_item.keys.map do |merchant_id|
+      merchants.find_by_id(merchant_id.to_i)
+    end
+  end
+
+  def merchants_with_only_one_item_registered_in_month(month_name)
+    invoice_found_in_given_month = invoices.collection.find_all do |invoice|
+      invoice.created_at.strftime("%B") == month_name
+    end
+    invoices_with_merchants_created_in_the_same_month = invoice_found_in_given_month.find_all do |invoice|
+      merchant = merchants.find_by_id(invoice.merchant_id)
+      merchant.created_at.strftime("%B") == month_name
+    end
+    grouped_by_merchant_ids = invoices_with_merchants_created_in_the_same_month.group_by do |invoice|
+      invoice.merchant_id
+    end
+    invoice_count = grouped_by_merchant_ids.keys.inject({}) do |hash, merchant_id|
+      hash[merchant_id] = grouped_by_merchant_ids[merchant_id].length
+      hash
+    end
+    merchant_id_count_pairs = invoice_count.find_all do |merchant_id, count|
+      count == 1
+    end
+    merchants_with_one_invoice_in_month = merchant_id_count_pairs.map do |id_count_pair|
+      merchants.find_by_id(id_count_pair[0])
+    end
+  end
+
+  def most_sold_item_for_merchant(merchant_id)
+    merchant_invoices = invoices.find_all_by_merchant_id(merchant_id)
+    merchant_invoice_items = merchant_invoices.inject([]) do |array, invoice|
+      array << invoice_items.find_all_by_invoice_id(invoice.id)
+    end.flatten
+    max_quantity = merchant_invoice_items.map do |invoice_item|
+      invoice_item.quantity.to_i
+    end.max
+    max_invoice_items = merchant_invoice_items.find_all do |invoice_item|
+      invoice_item.quantity == max_quantity.to_s
+    end
+    max_items = max_invoice_items.map do |invoice_item|
+      items.find_by_id(invoice_item.item_id)
+    end
+    return max_items
+  end
+
+  def best_item_for_merchant(merchant_id)
+    merchant_invoices = invoices.find_all_by_merchant_id(merchant_id)
+    merchant_invoice_items = merchant_invoices.inject([]) do |array, invoice|
+      array << invoice_items.find_all_by_invoice_id(invoice.id)
+    end.flatten
+    max_revenue = merchant_invoice_items.map do |invoice_item|
+      invoice_item.quantity.to_i * invoice_item.unit_price
+    end.max
+    max_invoice_item = merchant_invoice_items.find do |invoice_item|
+      invoice_item.quantity.to_i * invoice_item.unit_price == max_revenue
+    end
+    max_item = items.find_by_id(max_invoice_item.item_id)
+    return max_item
   end
 end

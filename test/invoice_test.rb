@@ -1,5 +1,4 @@
-require 'minitest/autorun'
-require 'minitest/pride'
+require_relative './helper_test'
 require 'bigdecimal'
 require 'time'
 # require_relative '../lib/invoice_repository'
@@ -7,7 +6,7 @@ require_relative '../lib/invoice'
 
 class InvoiceTest < Minitest::Test
   def setup
-    
+
     @i = Invoice.new({
         :id          => 6,
         :customer_id => 7,

@@ -1,5 +1,4 @@
-require 'minitest/autorun'
-require 'minitest/pride'
+require_relative './helper_test'
 require 'time'
 require_relative '../lib/transaction_repository'
 require_relative '../lib/transaction'
@@ -15,7 +14,7 @@ class TransactionRepositoryTest < Minitest::Test
       :credit_card_expiration_date => "0220",
       :result => "success",
       :created_at => Time.new(2018, 9, 10, 0, 0, 0, "-06:00"),
-      :updated_at => Time.new(2018, 9, 11, 0, 0, 0, "-06:00")      
+      :updated_at => Time.new(2018, 9, 11, 0, 0, 0, "-06:00")
     })
     @transaction_2 = Transaction.new({
       :id => 7,
@@ -24,7 +23,7 @@ class TransactionRepositoryTest < Minitest::Test
       :credit_card_expiration_date => "0220",
       :result => "success",
       :created_at => Time.new(2018, 9, 10, 0, 0, 0, "-06:00"),
-      :updated_at => Time.new(2018, 9, 11, 0, 0, 0, "-06:00")      
+      :updated_at => Time.new(2018, 9, 11, 0, 0, 0, "-06:00")
     })
     @transaction_3 = Transaction.new({
       :id => 8,
@@ -33,7 +32,7 @@ class TransactionRepositoryTest < Minitest::Test
       :credit_card_expiration_date => "0220",
       :result => "success",
       :created_at => Time.new(2018, 9, 10, 0, 0, 0, "-06:00"),
-      :updated_at => Time.new(2018, 9, 11, 0, 0, 0, "-06:00")      
+      :updated_at => Time.new(2018, 9, 11, 0, 0, 0, "-06:00")
     })
     @transaction_4 = Transaction.new({
       :id => 9,
@@ -42,7 +41,7 @@ class TransactionRepositoryTest < Minitest::Test
       :credit_card_expiration_date => "0221",
       :result => "success",
       :created_at => Time.new(2018, 9, 10, 0, 0, 0, "-06:00"),
-      :updated_at => Time.new(2018, 9, 11, 0, 0, 0, "-06:00")      
+      :updated_at => Time.new(2018, 9, 11, 0, 0, 0, "-06:00")
     })
     @transaction_5 = Transaction.new({
       :id => 10,
@@ -51,7 +50,7 @@ class TransactionRepositoryTest < Minitest::Test
       :credit_card_expiration_date => "0221",
       :result => "failure",
       :created_at => Time.new(2018, 9, 10, 0, 0, 0, "-06:00"),
-      :updated_at => Time.new(2018, 9, 11, 0, 0, 0, "-06:00")      
+      :updated_at => Time.new(2018, 9, 11, 0, 0, 0, "-06:00")
     })
   end
 
@@ -117,7 +116,7 @@ class TransactionRepositoryTest < Minitest::Test
     expected = [@transaction_1, @transaction_2, @transaction_3, @transaction_4]
     assert_equal expected, @tr.find_all_by_result("success")
     assert_equal [@transaction_5], @tr.find_all_by_result("failure")
-    assert_equal [], @tr.find_all_by_result("error")    
+    assert_equal [], @tr.find_all_by_result("error")
   end
 
   def test_it_can_create_a_new_transaction
@@ -128,7 +127,7 @@ class TransactionRepositoryTest < Minitest::Test
       :credit_card_expiration_date => "0222",
       :result => "success",
       :created_at => Time.new(2018, 9, 12, 0, 0, 0, "-06:00"),
-      :updated_at => Time.new(2018, 9, 13, 0, 0, 0, "-06:00")      
+      :updated_at => Time.new(2018, 9, 13, 0, 0, 0, "-06:00")
     }
     @tr.create(attributes)
     transaction = @tr.collection.last

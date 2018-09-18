@@ -1,5 +1,4 @@
-require 'minitest/autorun'
-require 'minitest/pride'
+require_relative './helper_test'
 require 'bigdecimal'
 require 'time'
 require_relative '../lib/item'
@@ -8,7 +7,7 @@ class ItemTest < Minitest::Test
 
   def setup
     @item = Item.new({
-      :id => 1, 
+      :id => 1,
       :name => "Pencil",
       :description => "You can use it to write things",
       :unit_price => BigDecimal.new(10.99,4),
