@@ -9,7 +9,7 @@ class TransactionRepository
   attr_reader   :collection
 
   def initialize
-    @collection       = []
+    @collection = []
   end
 
   def find_all_by_credit_card_number(credit_card_number)
@@ -19,7 +19,4 @@ class TransactionRepository
   def find_all_by_result(result)
     collection.find_all{|element|element.result == result}
   end
-
-
-
 end

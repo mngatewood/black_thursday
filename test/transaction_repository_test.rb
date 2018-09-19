@@ -166,5 +166,4 @@ class TransactionRepositoryTest < Minitest::Test
     @tr.delete(6)
     assert_nil @tr.find_by_id(6)
   end
-
 end

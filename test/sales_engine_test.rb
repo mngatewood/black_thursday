@@ -14,7 +14,6 @@ require_relative '../lib/invoice_repository'
 require_relative '../lib/customer'
 require_relative '../lib/customer_repository'
 
-
 class SalesEngineTest < Minitest::Test
 
   def setup
@@ -123,8 +122,6 @@ class SalesEngineTest < Minitest::Test
     assert_instance_of InvoiceRepository, ir
     assert_equal 4985, ir.collection.length
   end
-
-
 
   def test_creates_instance_of_customer_repository
     assert_instance_of CustomerRepository, @se.customers

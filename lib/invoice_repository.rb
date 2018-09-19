@@ -1,4 +1,3 @@
-require 'pry'
 require 'time'
 require_relative './repositories'
 

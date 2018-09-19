@@ -169,7 +169,6 @@ class ItemRepositoryTest < Minitest::Test
                   :merchant_id => 9
                   }
     assert_equal "Invalid key(s): weight, merchant_id", @ir.update(2, attributes)
-
   end
 
   def test_it_can_delete_an_item_by_id
@@ -178,5 +177,4 @@ class ItemRepositoryTest < Minitest::Test
     assert_nil @ir.find_by_id(1)
     assert_nil @ir.find_by_name("Pencil")
   end
-
 end
