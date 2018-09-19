@@ -321,13 +321,17 @@ class SalesAnalyst
     end
   end
 
-  def most_sold_item_for_merchant(merchant_id)
+  def find_all_invoice_items_for_a_merchant(merchant_id)
     merchant_invoices = all_paid_invoices.find_all do |invoice|
       invoice.merchant_id == merchant_id
     end
-    merchant_invoice_items = merchant_invoices.inject([]) do |array, invoice|
+    merchant_invoices.inject([]) do |array, invoice|
       array << invoice_items.find_all_by_invoice_id(invoice.id)
     end.flatten
+  end
+
+  def most_sold_item_for_merchant(merchant_id)
+    merchant_invoice_items = find_all_invoice_items_for_a_merchant(merchant_id)
     max_quantity = merchant_invoice_items.map do |invoice_item|
       invoice_item.quantity.to_i
     end.max
@@ -341,12 +345,7 @@ class SalesAnalyst
   end
 
   def best_item_for_merchant(merchant_id)
-    merchant_invoices = all_paid_invoices.find_all do |invoice|
-      invoice.merchant_id == merchant_id
-    end
-    merchant_invoice_items = merchant_invoices.inject([]) do |array, invoice|
-      array << invoice_items.find_all_by_invoice_id(invoice.id)
-    end.flatten
+    merchant_invoice_items = find_all_invoice_items_for_a_merchant(merchant_id)
     max_revenue = merchant_invoice_items.map do |invoice_item|
       invoice_item.quantity.to_i * invoice_item.unit_price
     end.max
