@@ -137,6 +137,15 @@ class SalesAnalystTest < Minitest::Test
     assert_equal ["Wednesday"], @sa.top_days_by_invoice_count
   end
 
+  def test_it_returns_hash_of_days_and_invoice_counts
+    assert_equal [6, 5, 3, 1, 0, 2, 4], @sa.invoice_count_by_day.keys
+    assert_instance_of Invoice, @sa.invoice_count_by_day.values.first.first
+  end
+
+  def test_it_returns_days_with_invoices_over_given_threshold
+    assert_equal [6, 5, 3, 0, 4], @sa.days_over_threshold(@sa.invoice_count_by_day, 700)
+  end
+
   def test_it_can_return_the_percentage_of_status
     assert_equal 29.55, @sa.invoice_status(:pending)
     assert_equal 56.95, @sa.invoice_status(:shipped)
