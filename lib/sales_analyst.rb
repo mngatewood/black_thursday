@@ -102,15 +102,24 @@ class SalesAnalyst
 
   def invoice_paid_in_full?(invoice_id)
     invoice_transactions = transactions.find_all_by_invoice_id(invoice_id)
-    last_transaction = invoice_transactions.sort_by{|t|t.updated_at}.last
-    !last_transaction ? false : last_transaction.result == :success
+    if invoice_transactions.length > 0
+      transaction_results = invoice_transactions.map{|transaction|transaction.result}
+      transaction_results.any?{|result|result == :success}
+    else
+      return false
+    end
   end
 
   def invoice_total(invoice_id)
-    invoice_items_array = invoice_items.find_all_by_invoice_id(invoice_id)
-    invoice_amounts = invoice_items_array.map{|ii|ii.unit_price_to_dollars * ii.quantity.to_i}
-    invoice_total = invoice_amounts.inject(BigDecimal.new(0, 1)){|sum,ii|sum + ii}.round(2)
-    return invoice_total
+    if invoice_paid_in_full?(invoice_id)
+      invoice_items_array = invoice_items.find_all_by_invoice_id(invoice_id)
+      invoice_total = invoice_items_array.inject(BigDecimal.new(0, 1)) do |sum, invoice_item|
+        sum + (invoice_item.quantity.to_i * invoice_item.unit_price).round(2)
+      end
+      return invoice_total
+    else
+      return 0
+    end
   end
 
   def average_invoices_per_merchant
@@ -212,12 +221,14 @@ class SalesAnalyst
   end
 
   def revenue_by_merchant(merchant_id)
-    invoices_for_merchant = @invoices.find_all_by_merchant_id(merchant_id)
-    invoices_for_merchant.inject(0) do |sum, invoice|
-       invoice_paid_in_full?(invoice.id) ?
-        sum + invoice_total(invoice.id) :
-        sum
+    invoices_for_merchant = invoices.find_all_by_merchant_id(merchant_id)
+    valid_invoices_for_merchant = invoices_for_merchant.find_all do |invoice|
+      invoice_paid_in_full?(invoice.id)
     end
+    total_revenue = valid_invoices_for_merchant.inject(0) do |sum, invoice|
+        sum + invoice_total(invoice.id)
+    end
+    return total_revenue
   end
 
   def top_revenue_earners(x=20)
@@ -233,7 +244,7 @@ class SalesAnalyst
   end
 
   def all_merchants_total_revenue
-    @merchants.collection.inject({}) do |merchant_revenue_total, merchant|
+    merchants.collection.inject(Hash.new(0)) do |merchant_revenue_total, merchant|
       merchant_revenue_total[merchant.id] = revenue_by_merchant(merchant.id)
       merchant_revenue_total
     end

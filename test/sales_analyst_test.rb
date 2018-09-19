@@ -1,12 +1,6 @@
 require_relative './helper_test'
 require_relative '../lib/sales_analyst'
 require_relative '../lib/sales_engine'
-# require_relative '../lib/item_repository'
-# require_relative '../lib/merchant_repository'
-# require_relative '../lib/transaction_repository'
-# require_relative '../lib/invoice_repository'
-# require_relative '../lib/customer_repository'
-# require_relative '../lib/new_repository'
 
 class SalesAnalystTest < Minitest::Test
 
@@ -107,8 +101,8 @@ class SalesAnalystTest < Minitest::Test
   def test_it_returns_true_if_invoice_is_paid
     assert @sa.invoice_paid_in_full?(1)
     assert @sa.invoice_paid_in_full?(200)
-    refute @sa.invoice_paid_in_full?(290)
-    refute @sa.invoice_paid_in_full?(1752)
+    refute @sa.invoice_paid_in_full?(180)
+    refute @sa.invoice_paid_in_full?(4234)
   end
 
   def test_it_returns_invoice_total_in_dollars
@@ -184,7 +178,7 @@ class SalesAnalystTest < Minitest::Test
   end
 
   def test_it_can_return_revenue_for_a_given_merchant
-    assert_equal BigDecimal.new(65416.79, 7), @sa.revenue_by_merchant(12334194)
+    assert_equal BigDecimal.new(81572.40, 7), @sa.revenue_by_merchant(12334194)
   end
 
   def test_it_can_return_the_most_sold_item_for_a_given_merchant
