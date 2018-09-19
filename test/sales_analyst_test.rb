@@ -192,6 +192,12 @@ class SalesAnalystTest < Minitest::Test
     assert_equal 2810, @sa.all_paid_invoices.length
   end
 
+  def test_it_can_find_all_invoice_items_by_a_merchant_id
+    actual = @sa.find_all_invoice_items_for_a_merchant(12334189).first
+    assert_instance_of InvoiceItem, actual
+    assert_equal 16, @sa.find_all_invoice_items_for_a_merchant(12334189).length
+  end
+
   def test_it_can_return_the_most_sold_item_for_a_given_merchant
     expected = @sa.items.find_by_id(263524984)
     assert_equal expected, @sa.most_sold_item_for_merchant(12334189).first
