@@ -1,12 +1,11 @@
 require_relative './helper_test'
 require 'bigdecimal'
 require 'time'
-# require_relative '../lib/invoice_repository'
 require_relative '../lib/invoice'
 
 class InvoiceTest < Minitest::Test
-  def setup
 
+  def setup
     @i = Invoice.new({
         :id          => 6,
         :customer_id => 7,
@@ -16,6 +15,7 @@ class InvoiceTest < Minitest::Test
         :updated_at => Time.new(2018, 9, 9, 0, 0, 0, "-06:00")
         })
   end
+
   def test_it_exist
     assert_instance_of Invoice, @i
   end

@@ -3,7 +3,7 @@ require 'time'
 require 'bigdecimal'
 require_relative '../lib/invoice_item'
 
-class ItemTest < Minitest::Test
+class InvoiceItemTest < Minitest::Test
 
   def setup
     @invoice_item = InvoiceItem.new({
@@ -34,5 +34,4 @@ class ItemTest < Minitest::Test
   def test_it_returns_price_as_a_float
     assert_equal 10.99, @invoice_item.unit_price_to_dollars
   end
-
 end

@@ -1,4 +1,3 @@
-require 'pry'
 require 'csv'
 require 'bigdecimal'
 require 'time'
@@ -23,7 +22,6 @@ class SalesEngine
                 :invoices,
                 :transactions,
                 :customers
-              # :XoX
 
   def initialize
     @items          = nil
@@ -89,8 +87,8 @@ class SalesEngine
 
   def build_merchant_object(data)
     Merchant.new({
-      :id   => data[:id],
-      :name => data[:name],
+      :id         => data[:id],
+      :name       => data[:name],
       :created_at => Time.parse(data[:created_at])
       })
   end

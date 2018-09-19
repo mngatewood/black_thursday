@@ -1,4 +1,3 @@
-require 'pry'
 require 'time'
 require_relative './repositories'
 
@@ -23,5 +22,4 @@ class CustomerRepository
       element.last_name.downcase.include?(last_name.downcase)
     end
   end
-
 end

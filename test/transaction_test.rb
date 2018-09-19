@@ -29,5 +29,4 @@ class TransactionTest < Minitest::Test
     assert_equal "2018-09-10 00:00:00 -0600", @transaction.created_at.to_s
     assert_equal "2018-09-11 00:00:00 -0600", @transaction.updated_at.to_s
   end
-
 end
