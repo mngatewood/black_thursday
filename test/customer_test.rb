@@ -25,7 +25,4 @@ class CustomerTest < Minitest::Test
     assert_equal "2018-09-10 00:00:00 -0600", @customer.created_at.to_s
     assert_equal "2018-09-11 00:00:00 -0600", @customer.updated_at.to_s
   end
-
-
-
 end

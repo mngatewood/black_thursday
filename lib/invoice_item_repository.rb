@@ -1,4 +1,3 @@
-require 'pry'
 require 'time'
 require_relative './repositories'
 
@@ -8,7 +7,6 @@ class InvoiceItemRepository
   attr_reader   :collection
 
   def initialize
-    @collection       = []
+    @collection = []
   end
-
 end

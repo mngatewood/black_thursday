@@ -1,4 +1,3 @@
-require 'pry'
 require_relative './repositories'
 
 class MerchantRepository
@@ -9,5 +8,4 @@ class MerchantRepository
   def initialize
     @collection = []
   end
-
 end

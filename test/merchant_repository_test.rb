@@ -2,7 +2,6 @@ require_relative './helper_test'
 require_relative '../lib/merchant_repository'
 require_relative '../lib/merchant'
 
-
 class MerchantRepositoryTest < Minitest::Test
 
   def setup
@@ -56,7 +55,6 @@ class MerchantRepositoryTest < Minitest::Test
     self.add_test_merchants
     assert_equal @mr.find_by_id(1), @merchant_1
     assert_nil @mr.find_by_id(0)
-
   end
 
   def test_it_can_find_a_single_merchant_by_name
@@ -93,5 +91,4 @@ class MerchantRepositoryTest < Minitest::Test
     assert_nil @mr.find_by_id(1)
     assert_nil @mr.find_by_name("Shopin1901")
   end
-
 end

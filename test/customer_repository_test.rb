@@ -142,5 +142,4 @@ class CustomerRepositoryTest < Minitest::Test
     @cr.delete(6)
     assert_nil @cr.find_by_id(6)
   end
-
 end
