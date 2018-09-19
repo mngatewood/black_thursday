@@ -57,7 +57,9 @@ class SalesAnalyst
   end
 
   def average_item_price_for_merchant(merchant_id)
-    all_items_for_merchant = items.all.find_all{|item|item.merchant_id == merchant_id.to_s}
+    all_items_for_merchant = items.all.find_all do |item|
+      item.merchant_id == merchant_id.to_s
+    end
     array_of_prices = all_items_for_merchant.map{|item|item.unit_price}
     return average(array_of_prices)
   end
@@ -103,23 +105,27 @@ class SalesAnalyst
   def invoice_paid_in_full?(invoice_id)
     invoice_transactions = transactions.find_all_by_invoice_id(invoice_id)
     if invoice_transactions.length > 0
-      transaction_results = invoice_transactions.map{|transaction|transaction.result}
-      transaction_results.any?{|result|result == :success}
+      evaluate_invoice_transactions(invoice_transactions)
     else
       return false
     end
   end
 
+  def evaluate_invoice_transactions(transactions)
+    transaction_results = transactions.map{|transaction|transaction.result}
+    transaction_results.any?{|result|result == :success}
+  end
+
   def invoice_total(invoice_id)
-    if invoice_paid_in_full?(invoice_id)
-      invoice_items_array = invoice_items.find_all_by_invoice_id(invoice_id)
-      invoice_total = invoice_items_array.inject(BigDecimal.new(0, 1)) do |sum, invoice_item|
-        sum + (invoice_item.quantity.to_i * invoice_item.unit_price).round(2)
-      end
-      return invoice_total
-    else
-      return 0
+    invoice_paid_in_full?(invoice_id) ? calculate_invoice_total(invoice_id) : 0
+  end
+
+  def calculate_invoice_total(invoice_id)
+    invoice_items_array = invoice_items.find_all_by_invoice_id(invoice_id)
+    invoice_total = invoice_items_array.inject(BigDecimal.new(0, 1)) do |sum, invoice_item|
+      sum + (invoice_item.quantity.to_i * invoice_item.unit_price).round(2)
     end
+    return invoice_total
   end
 
   def average_invoices_per_merchant
@@ -188,19 +194,22 @@ class SalesAnalyst
   end
 
   def top_days_by_invoice_count
-    average_invoices_per_day = @invoices.all.count/7
-    grouped_by_weekday = @invoices.all.group_by do |invoice|
+    daily_counts = invoice_count_by_day.values.map{|invoices|invoices.count}
+    threshold = (@invoices.all.count / 7) + average_invoices_per_day_standard_deviation(daily_counts)
+    top_days_numbers = days_over_threshold(invoice_count_by_day, threshold)
+    top_days_numbers.map{|daynumber|Date::DAYNAMES[daynumber]}
+  end
+
+  def invoice_count_by_day
+    @invoices.all.group_by do |invoice|
       invoice.created_at.wday
     end
-    invoices_by_day = grouped_by_weekday.values.map do |invoices|
-      invoices.count
-    end
-    day_nums = grouped_by_weekday.find_all do |weekday, invoices|
-      invoices.count > average_invoices_per_day + average_invoices_per_day_standard_deviation(invoices_by_day)
+  end
+
+  def days_over_threshold(hash, threshold)
+    hash.find_all do |weekday, invoices|
+      invoices.count > threshold
     end.to_h.keys
-    day_nums.map do |daynumber|
-      Date::DAYNAMES[daynumber]
-    end
   end
 
   def invoice_status(status_sym)
