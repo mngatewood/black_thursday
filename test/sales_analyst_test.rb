@@ -1,12 +1,6 @@
 require_relative './helper_test'
 require_relative '../lib/sales_analyst'
 require_relative '../lib/sales_engine'
-# require_relative '../lib/item_repository'
-# require_relative '../lib/merchant_repository'
-# require_relative '../lib/transaction_repository'
-# require_relative '../lib/invoice_repository'
-# require_relative '../lib/customer_repository'
-# require_relative '../lib/new_repository'
 
 class SalesAnalystTest < Minitest::Test
 
@@ -107,8 +101,8 @@ class SalesAnalystTest < Minitest::Test
   def test_it_returns_true_if_invoice_is_paid
     assert @sa.invoice_paid_in_full?(1)
     assert @sa.invoice_paid_in_full?(200)
-    refute @sa.invoice_paid_in_full?(290)
-    refute @sa.invoice_paid_in_full?(1752)
+    refute @sa.invoice_paid_in_full?(180)
+    refute @sa.invoice_paid_in_full?(4234)
   end
 
   def test_it_returns_invoice_total_in_dollars
@@ -180,11 +174,11 @@ class SalesAnalystTest < Minitest::Test
   end
 
   def test_it_can_return_merchants_with_one_item_per_month
-    assert_equal 14, @sa.merchants_with_only_one_item_registered_in_month("March").length
+    assert_equal 21, @sa.merchants_with_only_one_item_registered_in_month("March").length
   end
 
   def test_it_can_return_revenue_for_a_given_merchant
-    assert_equal BigDecimal.new(65416.79, 7), @sa.revenue_by_merchant(12334194)
+    assert_equal BigDecimal.new(81572.40, 7), @sa.revenue_by_merchant(12334194)
   end
 
   def test_it_can_return_the_most_sold_item_for_a_given_merchant
@@ -194,9 +188,18 @@ class SalesAnalystTest < Minitest::Test
     assert item_ids.include?(263524984)
   end
 
+  def test_it_returns_all_invoices_that_are_paid_in_full
+    assert_equal 2810, @sa.all_paid_invoices.length
+  end
+
+  def test_it_can_return_the_most_sold_item_for_a_given_merchant
+    expected = @sa.items.find_by_id(263524984)
+    assert_equal expected, @sa.most_sold_item_for_merchant(12334189).first
+  end
+
   def test_it_can_return_the_best_item_for_a_given_merchant
-    item_ids = @sa.best_item_for_merchant(12334189)
-    assert_equal 263516130, item_ids.id
+    expected = @sa.items.find_by_id(263516130)
+    assert_equal expected, @sa.best_item_for_merchant(12334189)
   end
 
   def test_it_can_rank_the_merchants_by_revenue
