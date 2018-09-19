@@ -301,30 +301,21 @@ class SalesAnalyst
   end
 
   def merchants_with_only_one_item_registered_in_month(month_name)
-    invoice_found_in_given_month = invoices.collection.find_all do |invoice|
-      invoice.created_at.strftime("%B") == month_name
-    end
-    invoices_with_merchants_created_in_the_same_month = invoice_found_in_given_month.find_all do |invoice|
-      merchant = merchants.find_by_id(invoice.merchant_id)
+    merchants_with_only_one_item.find_all do |merchant|
       merchant.created_at.strftime("%B") == month_name
     end
-    grouped_by_merchant_ids = invoices_with_merchants_created_in_the_same_month.group_by do |invoice|
-      invoice.merchant_id
-    end
-    invoice_count = grouped_by_merchant_ids.keys.inject({}) do |hash, merchant_id|
-      hash[merchant_id] = grouped_by_merchant_ids[merchant_id].length
-      hash
-    end
-    merchant_id_count_pairs = invoice_count.find_all do |merchant_id, count|
-      count == 1
-    end
-    merchants_with_one_invoice_in_month = merchant_id_count_pairs.map do |id_count_pair|
-      merchants.find_by_id(id_count_pair[0])
+  end
+
+  def all_paid_invoices
+    invoices.collection.find_all do |invoice|
+      invoice_paid_in_full?(invoice.id)
     end
   end
 
   def most_sold_item_for_merchant(merchant_id)
-    merchant_invoices = invoices.find_all_by_merchant_id(merchant_id)
+    merchant_invoices = all_paid_invoices.find_all do |invoice|
+      invoice.merchant_id == merchant_id
+    end
     merchant_invoice_items = merchant_invoices.inject([]) do |array, invoice|
       array << invoice_items.find_all_by_invoice_id(invoice.id)
     end.flatten
@@ -341,7 +332,9 @@ class SalesAnalyst
   end
 
   def best_item_for_merchant(merchant_id)
-    merchant_invoices = invoices.find_all_by_merchant_id(merchant_id)
+    merchant_invoices = all_paid_invoices.find_all do |invoice|
+      invoice.merchant_id == merchant_id
+    end
     merchant_invoice_items = merchant_invoices.inject([]) do |array, invoice|
       array << invoice_items.find_all_by_invoice_id(invoice.id)
     end.flatten
